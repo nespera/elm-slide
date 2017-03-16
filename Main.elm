@@ -2,6 +2,7 @@ import Html exposing (div, Html)
 import Html.Attributes exposing (style)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+import Svg.Events exposing (onClick)
 import Dict exposing (..)
 import Color exposing (..)
 
@@ -56,14 +57,14 @@ init =
 
 
 type Msg
-  = Something
+  = Choose String
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Something ->
-      (model, Cmd.none)
+    Choose name ->
+      ({model | active = name}, Cmd.none)
 
 
 
@@ -116,5 +117,6 @@ renderPiece active piece =
       height (toString (100 * piece.shape.height)),
       stroke border,
       strokeWidth "5",
-      fill piece.shape.color
+      fill piece.shape.color,
+      onClick (Choose piece.name)
   ] animate
