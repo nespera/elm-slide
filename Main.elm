@@ -5,6 +5,8 @@ import Svg.Attributes exposing (..)
 import Svg.Events exposing (onClick)
 import Dict exposing (..)
 import Color exposing (..)
+import Keyboard exposing (..)
+import Char exposing (fromCode)
 
 main =
   Html.program
@@ -57,7 +59,7 @@ init =
 
 
 type Msg
-  = Choose String
+  = Choose String | Pressed Char | NextPiece
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -65,15 +67,36 @@ update msg model =
   case msg of
     Choose name ->
       ({model | active = name}, Cmd.none)
+    Pressed char ->
+      (if (char == 'n') then next(model) else model, Cmd.none)
+    NextPiece ->
+      (model, Cmd.none)
+
+next: Model -> Model
+next model =
+  let
+    names = List.sort (Dict.keys model.pieces)
+    nextOne = List.head (dropUntil (names ++ names) model.active)
+  in
+    case nextOne of
+      Just piece ->
+         {model | active = piece}
+      Nothing -> model
 
 
+dropUntil: List String -> String -> List String
+dropUntil list item =
+  case list of
+    other :: tail ->
+      if (other == item) then tail else (dropUntil tail item)
+    [] -> []
 
 -- SUBSCRIPTIONS
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+    presses (\code -> Pressed (Char.fromCode code))
 
 
 
