@@ -84,7 +84,7 @@ view : Model -> Html Msg
 view model =
   Html.div [Html.Attributes.style [("margin", "20px")]] [
     svg [version "1.1", width "400", height "500", x "0", y "0", viewBox "0 0 400 500"] (
-      (rect [width "100%", height "100%", fill "gray"][])
+      (rect [width "100%", height "100%", fill "black"][])
       :: renderPieces model
       )
       --,circle [cx "150", cy "100", r "80", fill "green"][]
@@ -100,7 +100,7 @@ renderPieces model =
 
 flash: Svg Msg
 flash = animate [
-    attributeType "XML",  attributeName "stroke-width", from "12", to "0", dur "1s", repeatCount "indefinite"
+    attributeType "XML",  attributeName "fill-opacity", from "1", to "0.5", dur "1s", repeatCount "indefinite"
   ][]
 
 renderPiece: String -> Piece -> Svg Msg
@@ -108,14 +108,13 @@ renderPiece active piece =
   let
     isActive = (piece.name == active)
     animate = if (isActive) then [flash] else []
-    border = if (isActive) then "yellow" else "gray"
   in
     rect [
       x (toString(100 * piece.position.c)),
       y (toString(100 * piece.position.r)),
       width (toString (100 * piece.shape.width)),
       height (toString (100 * piece.shape.height)),
-      stroke border,
+      stroke "black",
       strokeWidth "5",
       fill piece.shape.color,
       onClick (Choose piece.name)
