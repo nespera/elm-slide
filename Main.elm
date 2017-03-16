@@ -20,24 +20,24 @@ main =
 type alias Piece = { name: String, shape: Shape, position: Position}
 type alias Shape = {width : Int, height : Int, color: String}
 type alias Position = { r: Int, c: Int }
-type alias Model = Dict String Piece
+type alias Model = {pieces: Dict String Piece, active: String}
 
 big: Shape
-big = {width = 2, height = 2, color = "red"}
+big = {width = 2, height = 2, color = "crimson"}
 
 small: Shape
 small = {width = 1, height = 1, color = "green"}
 
 tall: Shape
-tall = {width = 1, height = 2, color = "blue"}
+tall = {width = 1, height = 2, color = "teal"}
 
 wide: Shape
-wide = {width = 2, height = 1, color = "yellow"}
+wide = {width = 2, height = 1, color = "purple"}
 
 
 init : (Model, Cmd Msg)
 init =
-  (Dict.fromList [
+  ({pieces = Dict.fromList [
     ("king", {name = "king", shape = big, position = {r = 0, c = 1}}),
     ("tall1", {name = "tall1", shape = tall, position = {r = 0, c = 0}}),
     ("tall2", {name = "tall2", shape = tall, position = {r = 0, c = 3}}),
@@ -48,7 +48,7 @@ init =
     ("pawn2", {name = "pawn2", shape = small, position = {r = 3, c = 1}}),
     ("pawn3", {name = "pawn3", shape = small, position = {r = 3, c = 2}}),
     ("pawn4", {name = "pawn4", shape = small, position = {r = 4, c = 3}})
-  ], Cmd.none)
+  ], active = "king"}, Cmd.none)
 
 
 
@@ -93,18 +93,28 @@ view model =
 renderPieces: Model -> List (Svg Msg)
 renderPieces model =
   let
-    pieces = (Dict.values model)
+    pieces = (Dict.values model.pieces)
   in
-    List.map renderPiece pieces
+    List.map (renderPiece model.active) pieces
 
-renderPiece: Piece -> Svg Msg
-renderPiece piece =
-  rect [
-    x (toString(100 * piece.position.c)),
-    y (toString(100 * piece.position.r)),
-    width (toString (100 * piece.shape.width)),
-    height (toString (100 * piece.shape.height)),
-    stroke "black",
-    strokeWidth "5",
-    fill piece.shape.color
+flash: Svg Msg
+flash = animate [
+    attributeType "XML",  attributeName "stroke-width", from "12", to "0", dur "1s", repeatCount "indefinite"
   ][]
+
+renderPiece: String -> Piece -> Svg Msg
+renderPiece active piece =
+  let
+    isActive = (piece.name == active)
+    animate = if (isActive) then [flash] else []
+    border = if (isActive) then "yellow" else "gray"
+  in
+    rect [
+      x (toString(100 * piece.position.c)),
+      y (toString(100 * piece.position.r)),
+      width (toString (100 * piece.shape.width)),
+      height (toString (100 * piece.shape.height)),
+      stroke border,
+      strokeWidth "5",
+      fill piece.shape.color
+  ] animate
