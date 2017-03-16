@@ -59,7 +59,7 @@ init =
 
 
 type Msg
-  = Choose String | Pressed Char | NextPiece
+  = Choose String | Pressed Char
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -68,12 +68,16 @@ update msg model =
     Choose name ->
       ({model | active = name}, Cmd.none)
     Pressed char ->
-      (if (char == 'n') then next(model) else model, Cmd.none)
-    NextPiece ->
-      (model, Cmd.none)
+      (handleKeyPress model char, Cmd.none)
 
-next: Model -> Model
-next model =
+handleKeyPress: Model -> Char -> Model
+handleKeyPress model char =
+  case char of
+    'n' ->  nextPiece(model)
+    _ -> model
+
+nextPiece: Model -> Model
+nextPiece model =
   let
     names = List.sort (Dict.keys model.pieces)
     nextOne = List.head (dropUntil (names ++ names) model.active)
@@ -81,7 +85,7 @@ next model =
     case nextOne of
       Just piece ->
          {model | active = piece}
-      Nothing -> model
+      _ -> model
 
 
 dropUntil: List String -> String -> List String
