@@ -221,7 +221,7 @@ renderPiece active piece =
     xMid = xPos + (w//2)
     yMid = yPos + (h//2)
   in
-    g[][
+    g[onClick (Choose piece.name)][
       rect [
         x (toString xPos),
         y (toString yPos),
@@ -229,8 +229,7 @@ renderPiece active piece =
         height (toString h),
         stroke "black",
         strokeWidth "5",
-        fill piece.shape.color,
-        onClick (Choose piece.name)
-    ] animate,
-    text_ [x (toString xMid), y (toString (yMid + 10)), fontSize "50", textAnchor "middle", fill "white"][text piece.name]
-  ]
+        fill piece.shape.color
+      ] animate,
+      text_ [x (toString xMid), y (toString (yMid + 10)), fontSize "50", textAnchor "middle", fill "white"][text piece.name]
+    ]
