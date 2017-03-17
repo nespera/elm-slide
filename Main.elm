@@ -190,7 +190,7 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-  Html.div [Html.Attributes.style [("margin", "20px")]] [
+  Html.div [Html.Attributes.style [("padding", "20px")]] [
     svg [version "1.1", width "400", height "500", x "0", y "0", viewBox "0 0 400 500"] (
       (rect [width "100%", height "100%", fill "black"][])
       :: renderPieces model
