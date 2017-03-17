@@ -43,17 +43,17 @@ wide = {width = 2, height = 1, color = "orange"}
 init : (Model, Cmd Msg)
 init =
   ({pieces = Dict.fromList [
-    ("king", {name = "king", shape = big, position = {r = 0, c = 1}}),
-    ("tall1", {name = "tall1", shape = tall, position = {r = 0, c = 0}}),
-    ("tall2", {name = "tall2", shape = tall, position = {r = 0, c = 3}}),
-    ("tall3", {name = "tall3", shape = tall, position = {r = 2, c = 0}}),
-    ("tall4", {name = "tall4", shape = tall, position = {r = 2, c = 3}}),
-    ("wide", {name = "wide", shape = wide, position = {r = 2, c = 1}}),
-    ("pawn1", {name = "pawn1", shape = small, position = {r = 4, c = 0}}),
-    ("pawn2", {name = "pawn2", shape = small, position = {r = 3, c = 1}}),
-    ("pawn3", {name = "pawn3", shape = small, position = {r = 3, c = 2}}),
-    ("pawn4", {name = "pawn4", shape = small, position = {r = 4, c = 3}})
-  ], active = "king"}, Cmd.none)
+    ("a", {name = "a", shape = big, position = {r = 0, c = 1}}),
+    ("b", {name = "b", shape = tall, position = {r = 0, c = 0}}),
+    ("c", {name = "c", shape = tall, position = {r = 0, c = 3}}),
+    ("d", {name = "d", shape = tall, position = {r = 2, c = 0}}),
+    ("e", {name = "e", shape = tall, position = {r = 2, c = 3}}),
+    ("f", {name = "f", shape = wide, position = {r = 2, c = 1}}),
+    ("g", {name = "g", shape = small, position = {r = 4, c = 0}}),
+    ("h", {name = "h", shape = small, position = {r = 3, c = 1}}),
+    ("i", {name = "i", shape = small, position = {r = 3, c = 2}}),
+    ("j", {name = "j", shape = small, position = {r = 4, c = 3}})
+  ], active = "a"}, Cmd.none)
 
 allPieces: Model -> List Piece
 allPieces model =
@@ -232,14 +232,23 @@ renderPiece active piece =
   let
     isActive = (piece.name == active)
     animate = if (isActive) then [flash] else []
+    xPos = 100 * piece.position.c
+    yPos = 100 * piece.position.r
+    w = 100 * piece.shape.width
+    h = 100 * piece.shape.height
+    xMid = xPos + (w//2)
+    yMid = yPos + (h//2)
   in
-    rect [
-      x (toString(100 * piece.position.c)),
-      y (toString(100 * piece.position.r)),
-      width (toString (100 * piece.shape.width)),
-      height (toString (100 * piece.shape.height)),
-      stroke "black",
-      strokeWidth "5",
-      fill piece.shape.color,
-      onClick (Choose piece.name)
-  ] animate
+    g[][
+      rect [
+        x (toString xPos),
+        y (toString yPos),
+        width (toString w),
+        height (toString h),
+        stroke "black",
+        strokeWidth "5",
+        fill piece.shape.color,
+        onClick (Choose piece.name)
+    ] animate,
+    text_ [x (toString xMid), y (toString (yMid + 10)), fontSize "50", textAnchor "middle", fill "white"][text piece.name]
+  ]
