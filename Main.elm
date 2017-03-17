@@ -136,7 +136,7 @@ update msg model =
 handleKeyPress: Model -> KeyCode -> Model
 handleKeyPress model keyCode =
   let
-    char = String.fromChar (Char.fromCode keyCode) |>  Debug.log "char"
+    char = String.fromChar (Char.fromCode keyCode)
     names = Dict.keys model.pieces
   in
   case keyCode of
