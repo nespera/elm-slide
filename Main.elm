@@ -23,6 +23,9 @@ type alias Shape = {width : Int, height : Int, color: String}
 type alias Position = { r: Int, c: Int }
 type alias Model = {pieces: Dict String Piece, active: String}
 
+numRows = 5
+numCols = 4
+
 big: Shape
 big = {width = 2, height = 2, color = "crimson"}
 
@@ -51,6 +54,27 @@ init =
     ("pawn4", {name = "pawn4", shape = small, position = {r = 4, c = 3}})
   ], active = "king"}, Cmd.none)
 
+valid: Model -> Bool
+valid model =
+  inbounds model && noOverlaps model
+
+inbounds: Model -> Bool
+inbounds model =
+  let
+    positions = List.map (\piece -> piece.position) (Dict.values model.pieces)
+    rows = List.map (\position -> position.r) positions
+    maxRow = Maybe.withDefault 0 (List.maximum rows)
+    minRow = Maybe.withDefault 0 (List.minimum rows)
+    columns = List.map (\position -> position.c )positions
+    maxCol = Maybe.withDefault 0 (List.maximum columns)
+    minCol = Maybe.withDefault 0 (List.minimum columns)
+  in
+    minRow >= 0 && maxRow < numRows && minCol >= 0 && maxCol < numCols
+
+
+noOverlaps: Model -> Bool
+noOverlaps model =
+  True
 
 
 -- UPDATE
@@ -89,10 +113,11 @@ makeMove model direction =
       Just piece ->
         let
           newPosition = updatePosition piece.position direction
+          movedPiece = {piece | position = newPosition}
+          newModel = updatePiece model model.active movedPiece
         in
-         updatePiece model model.active {piece | position = newPosition}
+          if valid newModel then newModel else model
       _  -> model
-
 
 updatePosition: Position -> Direction -> Position
 updatePosition position direction =
