@@ -1,10 +1,10 @@
-import Html exposing (div, Html)
+import Html exposing (Html)
 import Html.Attributes exposing (style)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (onClick)
-import Dict exposing (..)
-import Keyboard exposing (..)
+import Dict exposing (Dict)
+import Keyboard exposing (KeyCode, downs, presses)
 import Set
 
 main =
@@ -14,7 +14,6 @@ main =
     , update = update
     , subscriptions = subscriptions
     }
-
 
 
 -- MODEL
@@ -200,7 +199,6 @@ subscriptions model =
     ]
 
 
-
 -- VIEW
 
 
@@ -211,8 +209,6 @@ view model =
       (rect [width "100%", height "100%", fill "black"][])
       :: renderPieces model
       )
-      --,circle [cx "150", cy "100", r "80", fill "green"][]
-      --,text_ [x "150", y "125", fontSize "60", textAnchor "middle", fill "white"][text "SVG"]
   ]
 
 renderPieces: Model -> List (Svg Msg)
