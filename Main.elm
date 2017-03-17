@@ -136,7 +136,7 @@ update msg model =
 handleKeyPress: Model -> KeyCode -> Model
 handleKeyPress model keyCode =
   let
-    char = String.fromChar (Char.fromCode keyCode)
+    char = keyCode |> Char.fromCode |> String.fromChar |> String.toLower
     names = Dict.keys model.pieces
   in
   case keyCode of
@@ -144,7 +144,7 @@ handleKeyPress model keyCode =
     38 -> makeMove model Up
     39 -> makeMove model Right
     40 -> makeMove model Down
-    k ->  if (List.member char names) then {model | active = char} else model
+    _ ->  if (List.member char names) then {model | active = char} else model
 
 makeMove: Model -> Direction -> Model
 makeMove model direction =
@@ -191,10 +191,14 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
   Html.div [Html.Attributes.style [("padding", "20px")]] [
-    svg [version "1.1", width "400", height "500", x "0", y "0", viewBox "0 0 400 500"] (
-      (rect [width "100%", height "100%", fill "black"][])
-      :: renderPieces model
-      )
+    svg [version "1.1", width "400", height "520", x "0", y "0", viewBox "0 0 400 520"]
+      (renderBoard ++ (renderPieces model))
+  ]
+
+renderBoard: List (Svg Msg)
+renderBoard = [
+    rect [width "400", height "500", fill "black"][] ,
+    rect [x "90", width "220", height "520", fill "black"][]
   ]
 
 renderPieces: Model -> List (Svg Msg)
