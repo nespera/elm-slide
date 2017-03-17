@@ -1,5 +1,5 @@
 import Html exposing (Html)
-import Html.Attributes exposing (style)
+import Html.Attributes as HtmlAttr
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (onClick)
@@ -190,9 +190,15 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-  Html.div [Html.Attributes.style [("padding", "20px")]] [
-    svg [version "1.1", width "400", height "520", x "0", y "0", viewBox "0 0 400 520"]
-      (renderBoard ++ (renderPieces model))
+  Html.div [HtmlAttr.style [("padding", "20px")]] [
+    Html.div [] [
+      svg [version "1.1", width "400", height "520", x "0", y "0", viewBox "0 0 400 520"]
+        (renderBoard ++ (renderPieces model))
+    ],
+    Html.div [][
+      Html.p [] [text "Get the red block to the exit at the bottom."],
+      Html.p [] [text "Choose block by letter or with mouse, move with arrows keys."]
+    ]
   ]
 
 renderBoard: List (Svg Msg)
