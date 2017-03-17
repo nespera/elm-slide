@@ -5,6 +5,7 @@ import Svg.Attributes exposing (..)
 import Svg.Events exposing (onClick)
 import Dict exposing (..)
 import Keyboard exposing (..)
+import Set
 
 main =
   Html.program
@@ -54,6 +55,10 @@ init =
     ("pawn4", {name = "pawn4", shape = small, position = {r = 4, c = 3}})
   ], active = "king"}, Cmd.none)
 
+allPieces: Model -> List Piece
+allPieces model =
+  Dict.values model.pieces
+
 valid: Model -> Bool
 valid model =
   inbounds model && noOverlaps model
@@ -61,7 +66,7 @@ valid model =
 inbounds: Model -> Bool
 inbounds model =
   let
-    positions = List.map (\piece -> piece.position) (Dict.values model.pieces)
+    positions = List.map (\piece -> piece.position) (allPieces model)
     rows = List.map (\position -> position.r) positions
     maxRow = Maybe.withDefault 0 (List.maximum rows)
     minRow = Maybe.withDefault 0 (List.minimum rows)
@@ -74,8 +79,42 @@ inbounds model =
 
 noOverlaps: Model -> Bool
 noOverlaps model =
-  True
+  let
+    pieces = (allPieces model)
+    allCoverage = (List.map coverage pieces) |> List.concat |> Debug.log "all coverage"
+    noDupes = dropDuplicates allCoverage  |> Debug.log "no dupes"
+  in
+    List.length allCoverage == List.length noDupes
 
+coverage: Piece -> List Position
+coverage piece =
+  let
+    r = piece.position.r
+    allRows = List.range r (piece.shape.height - 1 + r)
+    c = piece.position.c
+    allCols = List.range c (piece.shape.width - 1 + c)
+    tuples = cartesian allRows allCols
+  in
+    List.map (\(r,c) -> {r = r, c = c}) tuples
+
+cartesian : List a -> List b -> List (a,b)
+cartesian xs ys =
+  List.concatMap
+    ( \x -> List.map ( \y -> (x, y) ) ys )
+    xs
+
+dropDuplicates : List Position -> List Position
+dropDuplicates list =
+  let
+    step next (set, acc) =
+      let
+        hash = next.c + (next.r * 1000)
+      in
+        if Set.member hash set
+          then (set, acc)
+          else (Set.insert hash set, next::acc)
+  in
+    List.foldl step (Set.empty, []) list |> Tuple.second |> List.reverse
 
 -- UPDATE
 
@@ -179,7 +218,7 @@ view model =
 renderPieces: Model -> List (Svg Msg)
 renderPieces model =
   let
-    pieces = (Dict.values model.pieces)
+    pieces = (allPieces model)
   in
     List.map (renderPiece model.active) pieces
 
