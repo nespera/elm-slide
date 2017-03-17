@@ -4,9 +4,7 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (onClick)
 import Dict exposing (..)
-import Color exposing (..)
 import Keyboard exposing (..)
-import Char exposing (fromCode)
 
 main =
   Html.program
@@ -35,7 +33,7 @@ tall: Shape
 tall = {width = 1, height = 2, color = "teal"}
 
 wide: Shape
-wide = {width = 2, height = 1, color = "purple"}
+wide = {width = 2, height = 1, color = "orange"}
 
 
 init : (Model, Cmd Msg)
@@ -59,22 +57,34 @@ init =
 
 
 type Msg
-  = Choose String | Pressed Char
+  = Choose String | Pressed KeyCode
 
+type Move
+  = Up | Down | Right | Left
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     Choose name ->
       ({model | active = name}, Cmd.none)
-    Pressed char ->
-      (handleKeyPress model char, Cmd.none)
+    Pressed keyCode ->
+      (handleKeyPress model keyCode, Cmd.none)
 
-handleKeyPress: Model -> Char -> Model
-handleKeyPress model char =
-  case char of
-    'n' ->  nextPiece(model)
+handleKeyPress: Model -> KeyCode -> Model
+handleKeyPress model keyCode =
+  case keyCode of
+    110 ->  nextPiece model
+    37 -> move Left model
+    38 -> move Up model
+    39 -> move Right model
+    40 -> move Down model
     _ -> model
+
+move: Move -> Model -> Model
+move direction model =
+  nextPiece model
+
+--TODO: Actually move pieces!
 
 nextPiece: Model -> Model
 nextPiece model =
@@ -100,7 +110,10 @@ dropUntil list item =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    presses (\code -> Pressed (Char.fromCode code))
+  Sub.batch [
+      downs (\code -> Pressed code),
+      presses (\code -> Pressed code)
+    ]
 
 
 
