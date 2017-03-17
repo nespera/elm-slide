@@ -59,7 +59,7 @@ init =
 type Msg
   = Choose String | Pressed KeyCode
 
-type Move
+type Direction
   = Up | Down | Right | Left
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -74,17 +74,37 @@ handleKeyPress: Model -> KeyCode -> Model
 handleKeyPress model keyCode =
   case keyCode of
     110 ->  nextPiece model
-    37 -> move Left model
-    38 -> move Up model
-    39 -> move Right model
-    40 -> move Down model
+    37 -> makeMove model Left
+    38 -> makeMove model Up
+    39 -> makeMove model Right
+    40 -> makeMove model Down
     _ -> model
 
-move: Move -> Model -> Model
-move direction model =
-  nextPiece model
+makeMove: Model -> Direction -> Model
+makeMove model direction =
+  let
+    activePiece = Dict.get model.active model.pieces
+  in
+    case activePiece of
+      Just piece ->
+        let
+          newPosition = updatePosition piece.position direction
+        in
+         updatePiece model model.active {piece | position = newPosition}
+      _  -> model
 
---TODO: Actually move pieces!
+
+updatePosition: Position -> Direction -> Position
+updatePosition position direction =
+  case direction of
+    Up -> {position | r = position.r - 1}
+    Down -> {position | r = position.r + 1}
+    Left -> {position | c = position.c - 1}
+    Right -> {position | c = position.c + 1}
+
+updatePiece: Model -> String -> Piece -> Model
+updatePiece model name piece =
+    {model | pieces = (Dict.insert name piece model.pieces)}
 
 nextPiece: Model -> Model
 nextPiece model =
