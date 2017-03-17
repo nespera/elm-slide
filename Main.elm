@@ -6,6 +6,7 @@ import Svg.Events exposing (onClick)
 import Dict exposing (Dict)
 import Keyboard exposing (KeyCode, downs, presses)
 import Set
+import Char
 
 main =
   Html.program
@@ -80,8 +81,8 @@ noOverlaps: Model -> Bool
 noOverlaps model =
   let
     pieces = (allPieces model)
-    allCoverage = (List.map coverage pieces) |> List.concat |> Debug.log "all coverage"
-    noDupes = dropDuplicates allCoverage  |> Debug.log "no dupes"
+    allCoverage = (List.map coverage pieces) |> List.concat
+    noDupes = dropDuplicates allCoverage
   in
     List.length allCoverage == List.length noDupes
 
@@ -134,13 +135,16 @@ update msg model =
 
 handleKeyPress: Model -> KeyCode -> Model
 handleKeyPress model keyCode =
+  let
+    char = String.fromChar (Char.fromCode keyCode) |>  Debug.log "char"
+    names = Dict.keys model.pieces
+  in
   case keyCode of
-    110 ->  nextPiece model
     37 -> makeMove model Left
     38 -> makeMove model Up
     39 -> makeMove model Right
     40 -> makeMove model Down
-    _ -> model
+    k ->  if (List.member char names) then {model | active = char} else model
 
 makeMove: Model -> Direction -> Model
 makeMove model direction =
@@ -169,24 +173,6 @@ updatePiece: Model -> String -> Piece -> Model
 updatePiece model name piece =
     {model | pieces = (Dict.insert name piece model.pieces)}
 
-nextPiece: Model -> Model
-nextPiece model =
-  let
-    names = List.sort (Dict.keys model.pieces)
-    nextOne = List.head (dropUntil (names ++ names) model.active)
-  in
-    case nextOne of
-      Just piece ->
-         {model | active = piece}
-      _ -> model
-
-
-dropUntil: List String -> String -> List String
-dropUntil list item =
-  case list of
-    other :: tail ->
-      if (other == item) then tail else (dropUntil tail item)
-    [] -> []
 
 -- SUBSCRIPTIONS
 
