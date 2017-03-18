@@ -24,11 +24,14 @@ type Direction
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
-  case msg of
-    Choose name ->
-      ({model | active = name}, Cmd.none)
-    Pressed keyCode ->
-      (handleKeyPress model keyCode, Cmd.none)
+  if (Model.gameOver model)
+    then (model, Cmd.none)
+  else
+    case msg of
+      Choose name ->
+        ({model | active = name}, Cmd.none)
+      Pressed keyCode ->
+        (handleKeyPress model keyCode, Cmd.none)
 
 handleKeyPress: Model -> KeyCode -> Model
 handleKeyPress model keyCode =

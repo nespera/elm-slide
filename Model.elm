@@ -1,4 +1,4 @@
-module Model exposing (Model, Position, Piece, valid, initial, allPieces)
+module Model exposing (Model, Position, Piece, valid, initial, allPieces, gameOver)
 
 import Dict exposing (Dict)
 import Set
@@ -99,3 +99,12 @@ dropDuplicates list =
           else (Set.insert hash set, next::acc)
   in
     List.foldl step (Set.empty, []) list |> Tuple.second |> List.reverse
+
+gameOver: Model -> Bool
+gameOver model =
+  let
+    king = Dict.get "a" model.pieces
+   in
+     case king of
+       Just piece -> piece.position.c == 1 && piece.position.r == 3
+       _ -> False
