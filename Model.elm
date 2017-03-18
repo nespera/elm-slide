@@ -50,11 +50,11 @@ valid model =
 inbounds: Model -> Bool
 inbounds model =
   let
-    positions = List.map (\piece -> piece.position) (allPieces model)
+    positions = List.concatMap coverage (allPieces model)
     rows = List.map (\position -> position.r) positions
     maxRow = Maybe.withDefault 0 (List.maximum rows)
     minRow = Maybe.withDefault 0 (List.minimum rows)
-    columns = List.map (\position -> position.c )positions
+    columns = List.map (\position -> position.c ) positions
     maxCol = Maybe.withDefault 0 (List.maximum columns)
     minCol = Maybe.withDefault 0 (List.minimum columns)
   in
