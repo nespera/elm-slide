@@ -45,21 +45,18 @@ allPieces model =
 
 valid: Model -> Bool
 valid model =
-  inbounds model && noOverlaps model
+  noneOutsideBoard model && noOverlaps model
 
-inbounds: Model -> Bool
-inbounds model =
+noneOutsideBoard: Model -> Bool
+noneOutsideBoard model =
   let
     positions = List.concatMap coverage (allPieces model)
-    rows = List.map (\position -> position.r) positions
-    maxRow = Maybe.withDefault 0 (List.maximum rows)
-    minRow = Maybe.withDefault 0 (List.minimum rows)
-    columns = List.map (\position -> position.c ) positions
-    maxCol = Maybe.withDefault 0 (List.maximum columns)
-    minCol = Maybe.withDefault 0 (List.minimum columns)
   in
-    minRow >= 0 && maxRow < numRows && minCol >= 0 && maxCol < numCols
+    List.all onTheBoard positions
 
+onTheBoard: Position -> Bool
+onTheBoard pos =
+  pos.r >= 0 && pos.r < numRows && pos.c >= 0 && pos.c < numCols
 
 noOverlaps: Model -> Bool
 noOverlaps model =
