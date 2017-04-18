@@ -41,10 +41,7 @@ renderBoard = [
 
 renderPieces: Model -> List (Svg Msg)
 renderPieces model =
-  let
-    pieces = (Model.allPieces model)
-  in
-    List.map (renderPiece model) pieces
+    List.map (renderPiece model) model.pieces
 
 flash: Svg Msg
 flash = animate [

@@ -1,12 +1,11 @@
-module Model exposing (Model, Position, Piece, valid, initial, allPieces, gameOver)
+module Model exposing (Model, Position, Piece, valid, initial, gameOver, getPiece, updatePiece)
 
-import Dict exposing (Dict)
 import Set
 
 type alias Piece = { name: String, shape: Shape, position: Position}
 type alias Shape = {width : Int, height : Int, color: String}
 type alias Position = { r: Int, c: Int }
-type alias Model = {pieces: Dict String Piece, active: String}
+type alias Model = {pieces: List Piece, active: String}
 
 numRows = 5
 numCols = 4
@@ -23,25 +22,31 @@ tall = {width = 1, height = 2, color = "teal"}
 wide: Shape
 wide = {width = 2, height = 1, color = "orange"}
 
-
 initial : Model
 initial =
-  {pieces = Dict.fromList [
-    ("a", {name = "a", shape = big, position = {r = 0, c = 1}}),
-    ("b", {name = "b", shape = tall, position = {r = 0, c = 0}}),
-    ("c", {name = "c", shape = tall, position = {r = 0, c = 3}}),
-    ("d", {name = "d", shape = tall, position = {r = 2, c = 0}}),
-    ("e", {name = "e", shape = tall, position = {r = 2, c = 3}}),
-    ("f", {name = "f", shape = wide, position = {r = 2, c = 1}}),
-    ("g", {name = "g", shape = small, position = {r = 4, c = 0}}),
-    ("h", {name = "h", shape = small, position = {r = 3, c = 1}}),
-    ("i", {name = "i", shape = small, position = {r = 3, c = 2}}),
-    ("j", {name = "j", shape = small, position = {r = 4, c = 3}})
+  {pieces = [
+    {name = "a", shape = big, position = {r = 0, c = 1}},
+    {name = "b", shape = tall, position = {r = 0, c = 0}},
+    {name = "c", shape = tall, position = {r = 0, c = 3}},
+    {name = "d", shape = tall, position = {r = 2, c = 0}},
+    {name = "e", shape = tall, position = {r = 2, c = 3}},
+    {name = "f", shape = wide, position = {r = 2, c = 1}},
+    {name = "g", shape = small, position = {r = 4, c = 0}},
+    {name = "h", shape = small, position = {r = 3, c = 1}},
+    {name = "i", shape = small, position = {r = 3, c = 2}},
+    {name = "j", shape = small, position = {r = 4, c = 3}}
   ], active = "a"}
 
-allPieces: Model -> List Piece
-allPieces model =
-  Dict.values model.pieces
+getPiece: Model -> String -> Maybe Piece
+getPiece model name =
+  List.head (List.filter (isCalled name) model.pieces)
+
+updatePiece: Model -> Piece -> Model
+updatePiece model movedPiece =
+    let
+      otherPieces = List.filter (\p -> p.name /= movedPiece.name) model.pieces
+    in
+      {model | pieces = movedPiece :: otherPieces}
 
 valid: Model -> Bool
 valid model =
@@ -50,7 +55,7 @@ valid model =
 noneOutsideBoard: Model -> Bool
 noneOutsideBoard model =
   let
-    positions = List.concatMap coverage (allPieces model)
+    positions = List.concatMap coverage (model.pieces)
   in
     List.all onTheBoard positions
 
@@ -61,7 +66,7 @@ onTheBoard pos =
 noOverlaps: Model -> Bool
 noOverlaps model =
   let
-    pieces = (allPieces model)
+    pieces = model.pieces
     allCoverage = (List.map coverage pieces) |> List.concat
     noDupes = dropDuplicates allCoverage
   in
@@ -100,8 +105,12 @@ dropDuplicates list =
 gameOver: Model -> Bool
 gameOver model =
   let
-    king = Dict.get "a" model.pieces
+    king = getPiece model "a"
    in
      case king of
        Just piece -> piece.position.c == 1 && piece.position.r == 3
        _ -> False
+
+isCalled: String -> Piece -> Bool
+isCalled name piece =
+    piece.name == name

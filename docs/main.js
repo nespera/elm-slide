@@ -9416,27 +9416,21 @@ var _elm_lang$svg$Svg_Events$onMouseOut = _elm_lang$svg$Svg_Events$simpleOn('mou
 var _elm_lang$svg$Svg_Events$onMouseOver = _elm_lang$svg$Svg_Events$simpleOn('mouseover');
 var _elm_lang$svg$Svg_Events$onMouseUp = _elm_lang$svg$Svg_Events$simpleOn('mouseup');
 
-var _nespera$elm_slide$Model$gameOver = function (model) {
-	var king = A2(_elm_lang$core$Dict$get, 'a', model.pieces);
-	var _p0 = king;
-	if (_p0.ctor === 'Just') {
-		var _p1 = _p0._0;
-		return _elm_lang$core$Native_Utils.eq(_p1.position.c, 1) && _elm_lang$core$Native_Utils.eq(_p1.position.r, 3);
-	} else {
-		return false;
-	}
-};
+var _nespera$elm_slide$Model$isCalled = F2(
+	function (name, piece) {
+		return _elm_lang$core$Native_Utils.eq(piece.name, name);
+	});
 var _nespera$elm_slide$Model$dropDuplicates = function (list) {
 	var step = F2(
-		function (next, _p2) {
-			var _p3 = _p2;
-			var _p5 = _p3._0;
-			var _p4 = _p3._1;
+		function (next, _p0) {
+			var _p1 = _p0;
+			var _p3 = _p1._0;
+			var _p2 = _p1._1;
 			var hash = next.c + (next.r * 1000);
-			return A2(_elm_lang$core$Set$member, hash, _p5) ? {ctor: '_Tuple2', _0: _p5, _1: _p4} : {
+			return A2(_elm_lang$core$Set$member, hash, _p3) ? {ctor: '_Tuple2', _0: _p3, _1: _p2} : {
 				ctor: '_Tuple2',
-				_0: A2(_elm_lang$core$Set$insert, hash, _p5),
-				_1: {ctor: '::', _0: next, _1: _p4}
+				_0: A2(_elm_lang$core$Set$insert, hash, _p3),
+				_1: {ctor: '::', _0: next, _1: _p2}
 			};
 		});
 	return _elm_lang$core$List$reverse(
@@ -9473,17 +9467,14 @@ var _nespera$elm_slide$Model$coverage = function (piece) {
 	var tuples = A2(_nespera$elm_slide$Model$cartesian, allRows, allCols);
 	return A2(
 		_elm_lang$core$List$map,
-		function (_p6) {
-			var _p7 = _p6;
-			return {r: _p7._0, c: _p7._1};
+		function (_p4) {
+			var _p5 = _p4;
+			return {r: _p5._0, c: _p5._1};
 		},
 		tuples);
 };
-var _nespera$elm_slide$Model$allPieces = function (model) {
-	return _elm_lang$core$Dict$values(model.pieces);
-};
 var _nespera$elm_slide$Model$noOverlaps = function (model) {
-	var pieces = _nespera$elm_slide$Model$allPieces(model);
+	var pieces = model.pieces;
 	var allCoverage = _elm_lang$core$List$concat(
 		A2(_elm_lang$core$List$map, _nespera$elm_slide$Model$coverage, pieces));
 	var noDupes = _nespera$elm_slide$Model$dropDuplicates(allCoverage);
@@ -9491,124 +9482,114 @@ var _nespera$elm_slide$Model$noOverlaps = function (model) {
 		_elm_lang$core$List$length(allCoverage),
 		_elm_lang$core$List$length(noDupes));
 };
+var _nespera$elm_slide$Model$updatePiece = F2(
+	function (model, movedPiece) {
+		var otherPieces = A2(
+			_elm_lang$core$List$filter,
+			function (p) {
+				return !_elm_lang$core$Native_Utils.eq(p.name, movedPiece.name);
+			},
+			model.pieces);
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				pieces: {ctor: '::', _0: movedPiece, _1: otherPieces}
+			});
+	});
+var _nespera$elm_slide$Model$getPiece = F2(
+	function (model, name) {
+		return _elm_lang$core$List$head(
+			A2(
+				_elm_lang$core$List$filter,
+				_nespera$elm_slide$Model$isCalled(name),
+				model.pieces));
+	});
+var _nespera$elm_slide$Model$gameOver = function (model) {
+	var king = A2(_nespera$elm_slide$Model$getPiece, model, 'a');
+	var _p6 = king;
+	if (_p6.ctor === 'Just') {
+		var _p7 = _p6._0;
+		return _elm_lang$core$Native_Utils.eq(_p7.position.c, 1) && _elm_lang$core$Native_Utils.eq(_p7.position.r, 3);
+	} else {
+		return false;
+	}
+};
 var _nespera$elm_slide$Model$wide = {width: 2, height: 1, color: 'orange'};
 var _nespera$elm_slide$Model$tall = {width: 1, height: 2, color: 'teal'};
 var _nespera$elm_slide$Model$small = {width: 1, height: 1, color: 'green'};
 var _nespera$elm_slide$Model$big = {width: 2, height: 2, color: 'crimson'};
 var _nespera$elm_slide$Model$initial = {
-	pieces: _elm_lang$core$Dict$fromList(
-		{
+	pieces: {
+		ctor: '::',
+		_0: {
+			name: 'a',
+			shape: _nespera$elm_slide$Model$big,
+			position: {r: 0, c: 1}
+		},
+		_1: {
 			ctor: '::',
 			_0: {
-				ctor: '_Tuple2',
-				_0: 'a',
-				_1: {
-					name: 'a',
-					shape: _nespera$elm_slide$Model$big,
-					position: {r: 0, c: 1}
-				}
+				name: 'b',
+				shape: _nespera$elm_slide$Model$tall,
+				position: {r: 0, c: 0}
 			},
 			_1: {
 				ctor: '::',
 				_0: {
-					ctor: '_Tuple2',
-					_0: 'b',
-					_1: {
-						name: 'b',
-						shape: _nespera$elm_slide$Model$tall,
-						position: {r: 0, c: 0}
-					}
+					name: 'c',
+					shape: _nespera$elm_slide$Model$tall,
+					position: {r: 0, c: 3}
 				},
 				_1: {
 					ctor: '::',
 					_0: {
-						ctor: '_Tuple2',
-						_0: 'c',
-						_1: {
-							name: 'c',
-							shape: _nespera$elm_slide$Model$tall,
-							position: {r: 0, c: 3}
-						}
+						name: 'd',
+						shape: _nespera$elm_slide$Model$tall,
+						position: {r: 2, c: 0}
 					},
 					_1: {
 						ctor: '::',
 						_0: {
-							ctor: '_Tuple2',
-							_0: 'd',
-							_1: {
-								name: 'd',
-								shape: _nespera$elm_slide$Model$tall,
-								position: {r: 2, c: 0}
-							}
+							name: 'e',
+							shape: _nespera$elm_slide$Model$tall,
+							position: {r: 2, c: 3}
 						},
 						_1: {
 							ctor: '::',
 							_0: {
-								ctor: '_Tuple2',
-								_0: 'e',
-								_1: {
-									name: 'e',
-									shape: _nespera$elm_slide$Model$tall,
-									position: {r: 2, c: 3}
-								}
+								name: 'f',
+								shape: _nespera$elm_slide$Model$wide,
+								position: {r: 2, c: 1}
 							},
 							_1: {
 								ctor: '::',
 								_0: {
-									ctor: '_Tuple2',
-									_0: 'f',
-									_1: {
-										name: 'f',
-										shape: _nespera$elm_slide$Model$wide,
-										position: {r: 2, c: 1}
-									}
+									name: 'g',
+									shape: _nespera$elm_slide$Model$small,
+									position: {r: 4, c: 0}
 								},
 								_1: {
 									ctor: '::',
 									_0: {
-										ctor: '_Tuple2',
-										_0: 'g',
-										_1: {
-											name: 'g',
-											shape: _nespera$elm_slide$Model$small,
-											position: {r: 4, c: 0}
-										}
+										name: 'h',
+										shape: _nespera$elm_slide$Model$small,
+										position: {r: 3, c: 1}
 									},
 									_1: {
 										ctor: '::',
 										_0: {
-											ctor: '_Tuple2',
-											_0: 'h',
-											_1: {
-												name: 'h',
-												shape: _nespera$elm_slide$Model$small,
-												position: {r: 3, c: 1}
-											}
+											name: 'i',
+											shape: _nespera$elm_slide$Model$small,
+											position: {r: 3, c: 2}
 										},
 										_1: {
 											ctor: '::',
 											_0: {
-												ctor: '_Tuple2',
-												_0: 'i',
-												_1: {
-													name: 'i',
-													shape: _nespera$elm_slide$Model$small,
-													position: {r: 3, c: 2}
-												}
+												name: 'j',
+												shape: _nespera$elm_slide$Model$small,
+												position: {r: 4, c: 3}
 											},
-											_1: {
-												ctor: '::',
-												_0: {
-													ctor: '_Tuple2',
-													_0: 'j',
-													_1: {
-														name: 'j',
-														shape: _nespera$elm_slide$Model$small,
-														position: {r: 4, c: 3}
-													}
-												},
-												_1: {ctor: '[]'}
-											}
+											_1: {ctor: '[]'}
 										}
 									}
 								}
@@ -9617,7 +9598,8 @@ var _nespera$elm_slide$Model$initial = {
 					}
 				}
 			}
-		}),
+		}
+	},
 	active: 'a'
 };
 var _nespera$elm_slide$Model$numCols = 4;
@@ -9626,10 +9608,7 @@ var _nespera$elm_slide$Model$onTheBoard = function (pos) {
 	return (_elm_lang$core$Native_Utils.cmp(pos.r, 0) > -1) && ((_elm_lang$core$Native_Utils.cmp(pos.r, _nespera$elm_slide$Model$numRows) < 0) && ((_elm_lang$core$Native_Utils.cmp(pos.c, 0) > -1) && (_elm_lang$core$Native_Utils.cmp(pos.c, _nespera$elm_slide$Model$numCols) < 0)));
 };
 var _nespera$elm_slide$Model$noneOutsideBoard = function (model) {
-	var positions = A2(
-		_elm_lang$core$List$concatMap,
-		_nespera$elm_slide$Model$coverage,
-		_nespera$elm_slide$Model$allPieces(model));
+	var positions = A2(_elm_lang$core$List$concatMap, _nespera$elm_slide$Model$coverage, model.pieces);
 	return A2(_elm_lang$core$List$all, _nespera$elm_slide$Model$onTheBoard, positions);
 };
 var _nespera$elm_slide$Model$valid = function (model) {
@@ -9790,11 +9769,10 @@ var _nespera$elm_slide$View$renderPiece = F2(
 			});
 	});
 var _nespera$elm_slide$View$renderPieces = function (model) {
-	var pieces = _nespera$elm_slide$Model$allPieces(model);
 	return A2(
 		_elm_lang$core$List$map,
 		_nespera$elm_slide$View$renderPiece(model),
-		pieces);
+		model.pieces);
 };
 var _nespera$elm_slide$View$renderBoard = {
 	ctor: '::',
@@ -9974,14 +9952,6 @@ var _nespera$elm_slide$Main$subscriptions = function (model) {
 			}
 		});
 };
-var _nespera$elm_slide$Main$updatePiece = F3(
-	function (model, name, piece) {
-		return _elm_lang$core$Native_Utils.update(
-			model,
-			{
-				pieces: A3(_elm_lang$core$Dict$insert, name, piece, model.pieces)
-			});
-	});
 var _nespera$elm_slide$Main$updatePosition = F2(
 	function (position, direction) {
 		var _p0 = direction;
@@ -10006,7 +9976,7 @@ var _nespera$elm_slide$Main$updatePosition = F2(
 	});
 var _nespera$elm_slide$Main$makeMove = F2(
 	function (model, direction) {
-		var activePiece = A2(_elm_lang$core$Dict$get, model.active, model.pieces);
+		var activePiece = A2(_nespera$elm_slide$Model$getPiece, model, model.active);
 		var _p1 = activePiece;
 		if (_p1.ctor === 'Just') {
 			var _p2 = _p1._0;
@@ -10014,25 +9984,37 @@ var _nespera$elm_slide$Main$makeMove = F2(
 			var movedPiece = _elm_lang$core$Native_Utils.update(
 				_p2,
 				{position: newPosition});
-			var newModel = A3(_nespera$elm_slide$Main$updatePiece, model, model.active, movedPiece);
+			var newModel = A2(_nespera$elm_slide$Model$updatePiece, model, movedPiece);
 			return _nespera$elm_slide$Model$valid(newModel) ? newModel : model;
 		} else {
 			return model;
 		}
 	});
-var _nespera$elm_slide$Main$init = {ctor: '_Tuple2', _0: _nespera$elm_slide$Model$initial, _1: _elm_lang$core$Platform_Cmd$none};
+var _nespera$elm_slide$Main$init = function (flag) {
+	var _p3 = flag;
+	if (_p3.ctor === 'Just') {
+		return {ctor: '_Tuple2', _0: _p3._0, _1: _elm_lang$core$Platform_Cmd$none};
+	} else {
+		return {ctor: '_Tuple2', _0: _nespera$elm_slide$Model$initial, _1: _elm_lang$core$Platform_Cmd$none};
+	}
+};
 var _nespera$elm_slide$Main$Left = {ctor: 'Left'};
 var _nespera$elm_slide$Main$Right = {ctor: 'Right'};
 var _nespera$elm_slide$Main$Down = {ctor: 'Down'};
 var _nespera$elm_slide$Main$Up = {ctor: 'Up'};
 var _nespera$elm_slide$Main$handleKeyPress = F2(
 	function (model, keyCode) {
-		var names = _elm_lang$core$Dict$keys(model.pieces);
+		var names = A2(
+			_elm_lang$core$List$map,
+			function (p) {
+				return p.name;
+			},
+			model.pieces);
 		var $char = _elm_lang$core$String$toLower(
 			_elm_lang$core$String$fromChar(
 				_elm_lang$core$Char$fromCode(keyCode)));
-		var _p3 = keyCode;
-		switch (_p3) {
+		var _p4 = keyCode;
+		switch (_p4) {
 			case 37:
 				return A2(_nespera$elm_slide$Main$makeMove, model, _nespera$elm_slide$Main$Left);
 			case 38:
@@ -10052,26 +10034,103 @@ var _nespera$elm_slide$Main$update = F2(
 		if (_nespera$elm_slide$Model$gameOver(model)) {
 			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		} else {
-			var _p4 = msg;
-			if (_p4.ctor === 'Choose') {
+			var _p5 = msg;
+			if (_p5.ctor === 'Choose') {
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{active: _p4._0}),
+						{active: _p5._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			} else {
 				return {
 					ctor: '_Tuple2',
-					_0: A2(_nespera$elm_slide$Main$handleKeyPress, model, _p4._0),
+					_0: A2(_nespera$elm_slide$Main$handleKeyPress, model, _p5._0),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			}
 		}
 	});
-var _nespera$elm_slide$Main$main = _elm_lang$html$Html$program(
-	{init: _nespera$elm_slide$Main$init, view: _nespera$elm_slide$View$view, update: _nespera$elm_slide$Main$update, subscriptions: _nespera$elm_slide$Main$subscriptions})();
+var _nespera$elm_slide$Main$main = _elm_lang$html$Html$programWithFlags(
+	{init: _nespera$elm_slide$Main$init, view: _nespera$elm_slide$View$view, update: _nespera$elm_slide$Main$update, subscriptions: _nespera$elm_slide$Main$subscriptions})(
+	_elm_lang$core$Json_Decode$oneOf(
+		{
+			ctor: '::',
+			_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$core$Json_Decode$map,
+					_elm_lang$core$Maybe$Just,
+					A2(
+						_elm_lang$core$Json_Decode$andThen,
+						function (active) {
+							return A2(
+								_elm_lang$core$Json_Decode$andThen,
+								function (pieces) {
+									return _elm_lang$core$Json_Decode$succeed(
+										{active: active, pieces: pieces});
+								},
+								A2(
+									_elm_lang$core$Json_Decode$field,
+									'pieces',
+									_elm_lang$core$Json_Decode$list(
+										A2(
+											_elm_lang$core$Json_Decode$andThen,
+											function (name) {
+												return A2(
+													_elm_lang$core$Json_Decode$andThen,
+													function (position) {
+														return A2(
+															_elm_lang$core$Json_Decode$andThen,
+															function (shape) {
+																return _elm_lang$core$Json_Decode$succeed(
+																	{name: name, position: position, shape: shape});
+															},
+															A2(
+																_elm_lang$core$Json_Decode$field,
+																'shape',
+																A2(
+																	_elm_lang$core$Json_Decode$andThen,
+																	function (color) {
+																		return A2(
+																			_elm_lang$core$Json_Decode$andThen,
+																			function (height) {
+																				return A2(
+																					_elm_lang$core$Json_Decode$andThen,
+																					function (width) {
+																						return _elm_lang$core$Json_Decode$succeed(
+																							{color: color, height: height, width: width});
+																					},
+																					A2(_elm_lang$core$Json_Decode$field, 'width', _elm_lang$core$Json_Decode$int));
+																			},
+																			A2(_elm_lang$core$Json_Decode$field, 'height', _elm_lang$core$Json_Decode$int));
+																	},
+																	A2(_elm_lang$core$Json_Decode$field, 'color', _elm_lang$core$Json_Decode$string))));
+													},
+													A2(
+														_elm_lang$core$Json_Decode$field,
+														'position',
+														A2(
+															_elm_lang$core$Json_Decode$andThen,
+															function (c) {
+																return A2(
+																	_elm_lang$core$Json_Decode$andThen,
+																	function (r) {
+																		return _elm_lang$core$Json_Decode$succeed(
+																			{c: c, r: r});
+																	},
+																	A2(_elm_lang$core$Json_Decode$field, 'r', _elm_lang$core$Json_Decode$int));
+															},
+															A2(_elm_lang$core$Json_Decode$field, 'c', _elm_lang$core$Json_Decode$int))));
+											},
+											A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string)))));
+						},
+						A2(_elm_lang$core$Json_Decode$field, 'active', _elm_lang$core$Json_Decode$string))),
+				_1: {ctor: '[]'}
+			}
+		}));
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};

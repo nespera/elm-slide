@@ -1,21 +1,26 @@
-import Html exposing (program)
-import Dict exposing (Dict)
+import Html
 import Keyboard exposing (KeyCode, downs, presses)
 import Char
 import Model exposing (Model, Position, Piece)
 import Msg exposing (..)
 import View exposing (view)
 
+main: Program (Maybe Model) Model Msg
 main =
-  Html.program
+  Html.programWithFlags
     { init = init
     , view = view
     , update = update
     , subscriptions = subscriptions
     }
 
-init : (Model, Cmd Msg)
-init = (Model.initial, Cmd.none)
+init : Maybe Model -> ( Model, Cmd msg )
+init flag =
+    case flag of
+        Just m ->
+            ( m, Cmd.none )
+        Nothing ->
+            ( Model.initial, Cmd.none )
 
 -- UPDATE
 
@@ -37,7 +42,7 @@ handleKeyPress: Model -> KeyCode -> Model
 handleKeyPress model keyCode =
   let
     char = keyCode |> Char.fromCode |> String.fromChar |> String.toLower
-    names = Dict.keys model.pieces
+    names = List.map (\p -> p.name) model.pieces
   in
   case keyCode of
     37 -> makeMove model Left
@@ -49,14 +54,14 @@ handleKeyPress model keyCode =
 makeMove: Model -> Direction -> Model
 makeMove model direction =
   let
-    activePiece = Dict.get model.active model.pieces
+    activePiece = Model.getPiece model model.active
   in
     case activePiece of
       Just piece ->
         let
           newPosition = updatePosition piece.position direction
           movedPiece = {piece | position = newPosition}
-          newModel = updatePiece model model.active movedPiece
+          newModel = Model.updatePiece model movedPiece
         in
           if Model.valid newModel then newModel else model
       _  -> model
@@ -68,10 +73,6 @@ updatePosition position direction =
     Down -> {position | r = position.r + 1}
     Left -> {position | c = position.c - 1}
     Right -> {position | c = position.c + 1}
-
-updatePiece: Model -> String -> Piece -> Model
-updatePiece model name piece =
-    {model | pieces = (Dict.insert name piece model.pieces)}
 
 
 -- SUBSCRIPTIONS

@@ -2,5 +2,7 @@
 <script src="main.js"></script>
 <script>
     var node = document.getElementById('main');
-    var app = Elm.Main.embed(node);
+    const model = localStorage.getItem('model')
+    const startingModel = model ? JSON.parse(model) : null
+    var app = Elm.Main.embed(node, startingModel);
 </script>
