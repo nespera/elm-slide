@@ -39,6 +39,8 @@ update msg model =
         ({model | active = name}, store model)
       Pressed keyCode ->
         (handleKeyPress model keyCode, store model)
+      Reset ->
+        (Model.initial, store model)
 
 handleKeyPress: Model -> KeyCode -> Model
 handleKeyPress model keyCode =

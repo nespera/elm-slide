@@ -2,6 +2,7 @@ module View exposing (..)
 
 import Html exposing (Html)
 import Html.Attributes as HtmlAttr
+import Html.Events as HtmlEv
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (onClick)
@@ -15,23 +16,26 @@ view model =
       svg [version "1.1", width "80vmin", height "80vmin", x "0", y "0", viewBox "0 0 400 520"]
         (renderBoard ++ (renderPieces model))
     ],
-    Html.div []
-    (if (gameOver model) then showGameOverMsg else renderInstructions)
+    Html.div [] [
+        (if (gameOver model) then gameOverMessage else instructions), resetLink
+    ]
   ]
 
-renderInstructions: List (Html Msg)
-renderInstructions =
-  [
-    Html.p [HtmlAttr.style [("font-family", "Verdana, Sans")]] [text "Get the red block to the exit at the bottom. Choose block by letter or with mouse, move with arrows keys."]
-  ]
+textStyle = HtmlAttr.style [("font-family", "Verdana, Sans")]
 
-showGameOverMsg: List (Html Msg)
-showGameOverMsg =
-  [
-    Html.h1 [HtmlAttr.style [("color", "red")]] [text "You completed it!"],
-    Html.p [] [text "Refresh the page to start again."]
-  ]
+instructions: Html Msg
+instructions =
+    Html.p [textStyle]
+        [text "Get the red block to the exit at the bottom. Choose block by letter or with mouse, move with arrows keys."]
 
+gameOverMessage: Html Msg
+gameOverMessage =
+    Html.h1 [HtmlAttr.style [("color", "red")]] [text "You completed it!"]
+
+resetLink: Html Msg
+resetLink =
+    Html.p [textStyle]
+        [Html.a [HtmlAttr.href "#", HtmlEv.onClick Reset][text "Start again"]]
 
 renderBoard: List (Svg Msg)
 renderBoard = [

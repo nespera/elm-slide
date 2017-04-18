@@ -8878,6 +8878,121 @@ var _elm_lang$html$Html_Attributes$classList = function (list) {
 };
 var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
 
+var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _elm_lang$html$Html_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$bool);
+var _elm_lang$html$Html_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
+var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
+var _elm_lang$html$Html_Events$onFocus = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'focus',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onBlur = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'blur',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
+	_elm_lang$html$Html_Events$defaultOptions,
+	{preventDefault: true});
+var _elm_lang$html$Html_Events$onSubmit = function (msg) {
+	return A3(
+		_elm_lang$html$Html_Events$onWithOptions,
+		'submit',
+		_elm_lang$html$Html_Events$onSubmitOptions,
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onCheck = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'change',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
+};
+var _elm_lang$html$Html_Events$onInput = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'input',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
+};
+var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseout',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseover',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseleave',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseenter',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseup',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mousedown',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'dblclick',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'click',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});
+
 var _elm_lang$keyboard$Keyboard$onSelfMsg = F3(
 	function (router, _p0, state) {
 		var _p1 = _p0;
@@ -9631,6 +9746,7 @@ var _nespera$elm_slide$Model$Model = F2(
 		return {pieces: a, active: b};
 	});
 
+var _nespera$elm_slide$Msg$Reset = {ctor: 'Reset'};
 var _nespera$elm_slide$Msg$Pressed = function (a) {
 	return {ctor: 'Pressed', _0: a};
 };
@@ -9817,59 +9933,68 @@ var _nespera$elm_slide$View$renderBoard = {
 		_1: {ctor: '[]'}
 	}
 };
-var _nespera$elm_slide$View$showGameOverMsg = {
-	ctor: '::',
-	_0: A2(
-		_elm_lang$html$Html$h1,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'color', _1: 'red'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$svg$Svg$text('You completed it!'),
-			_1: {ctor: '[]'}
-		}),
-	_1: {
+var _nespera$elm_slide$View$gameOverMessage = A2(
+	_elm_lang$html$Html$h1,
+	{
 		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$p,
-			{ctor: '[]'},
+		_0: _elm_lang$html$Html_Attributes$style(
 			{
 				ctor: '::',
-				_0: _elm_lang$svg$Svg$text('Refresh the page to start again.'),
+				_0: {ctor: '_Tuple2', _0: 'color', _1: 'red'},
 				_1: {ctor: '[]'}
 			}),
 		_1: {ctor: '[]'}
-	}
-};
-var _nespera$elm_slide$View$renderInstructions = {
-	ctor: '::',
-	_0: A2(
-		_elm_lang$html$Html$p,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$svg$Svg$text('You completed it!'),
+		_1: {ctor: '[]'}
+	});
+var _nespera$elm_slide$View$textStyle = _elm_lang$html$Html_Attributes$style(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'Verdana, Sans'},
+		_1: {ctor: '[]'}
+	});
+var _nespera$elm_slide$View$instructions = A2(
+	_elm_lang$html$Html$p,
+	{
+		ctor: '::',
+		_0: _nespera$elm_slide$View$textStyle,
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$svg$Svg$text('Get the red block to the exit at the bottom. Choose block by letter or with mouse, move with arrows keys.'),
+		_1: {ctor: '[]'}
+	});
+var _nespera$elm_slide$View$resetLink = A2(
+	_elm_lang$html$Html$p,
+	{
+		ctor: '::',
+		_0: _nespera$elm_slide$View$textStyle,
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$a,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$href('#'),
+				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'Verdana, Sans'},
+					_0: _elm_lang$html$Html_Events$onClick(_nespera$elm_slide$Msg$Reset),
 					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$svg$Svg$text('Get the red block to the exit at the bottom. Choose block by letter or with mouse, move with arrows keys.'),
-			_1: {ctor: '[]'}
-		}),
-	_1: {ctor: '[]'}
-};
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$svg$Svg$text('Start again'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	});
 var _nespera$elm_slide$View$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -9928,7 +10053,15 @@ var _nespera$elm_slide$View$view = function (model) {
 				_0: A2(
 					_elm_lang$html$Html$div,
 					{ctor: '[]'},
-					_nespera$elm_slide$Model$gameOver(model) ? _nespera$elm_slide$View$showGameOverMsg : _nespera$elm_slide$View$renderInstructions),
+					{
+						ctor: '::',
+						_0: _nespera$elm_slide$Model$gameOver(model) ? _nespera$elm_slide$View$gameOverMessage : _nespera$elm_slide$View$instructions,
+						_1: {
+							ctor: '::',
+							_0: _nespera$elm_slide$View$resetLink,
+							_1: {ctor: '[]'}
+						}
+					}),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -10050,20 +10183,27 @@ var _nespera$elm_slide$Main$update = F2(
 			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		} else {
 			var _p5 = msg;
-			if (_p5.ctor === 'Choose') {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{active: _p5._0}),
-					_1: _nespera$elm_slide$Main$store(model)
-				};
-			} else {
-				return {
-					ctor: '_Tuple2',
-					_0: A2(_nespera$elm_slide$Main$handleKeyPress, model, _p5._0),
-					_1: _nespera$elm_slide$Main$store(model)
-				};
+			switch (_p5.ctor) {
+				case 'Choose':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{active: _p5._0}),
+						_1: _nespera$elm_slide$Main$store(model)
+					};
+				case 'Pressed':
+					return {
+						ctor: '_Tuple2',
+						_0: A2(_nespera$elm_slide$Main$handleKeyPress, model, _p5._0),
+						_1: _nespera$elm_slide$Main$store(model)
+					};
+				default:
+					return {
+						ctor: '_Tuple2',
+						_0: _nespera$elm_slide$Model$initial,
+						_1: _nespera$elm_slide$Main$store(model)
+					};
 			}
 		}
 	});
