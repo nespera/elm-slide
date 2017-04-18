@@ -9998,6 +9998,21 @@ var _nespera$elm_slide$Main$init = function (flag) {
 		return {ctor: '_Tuple2', _0: _nespera$elm_slide$Model$initial, _1: _elm_lang$core$Platform_Cmd$none};
 	}
 };
+var _nespera$elm_slide$Main$store = _elm_lang$core$Native_Platform.outgoingPort(
+	'store',
+	function (v) {
+		return {
+			pieces: _elm_lang$core$Native_List.toArray(v.pieces).map(
+				function (v) {
+					return {
+						name: v.name,
+						shape: {width: v.shape.width, height: v.shape.height, color: v.shape.color},
+						position: {r: v.position.r, c: v.position.c}
+					};
+				}),
+			active: v.active
+		};
+	});
 var _nespera$elm_slide$Main$Left = {ctor: 'Left'};
 var _nespera$elm_slide$Main$Right = {ctor: 'Right'};
 var _nespera$elm_slide$Main$Down = {ctor: 'Down'};
@@ -10041,13 +10056,13 @@ var _nespera$elm_slide$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{active: _p5._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_1: _nespera$elm_slide$Main$store(model)
 				};
 			} else {
 				return {
 					ctor: '_Tuple2',
 					_0: A2(_nespera$elm_slide$Main$handleKeyPress, model, _p5._0),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_1: _nespera$elm_slide$Main$store(model)
 				};
 			}
 		}

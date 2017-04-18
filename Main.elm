@@ -1,3 +1,5 @@
+port module Main exposing (..)
+
 import Html
 import Keyboard exposing (KeyCode, downs, presses)
 import Char
@@ -34,9 +36,9 @@ update msg model =
   else
     case msg of
       Choose name ->
-        ({model | active = name}, Cmd.none)
+        ({model | active = name}, store model)
       Pressed keyCode ->
-        (handleKeyPress model keyCode, Cmd.none)
+        (handleKeyPress model keyCode, store model)
 
 handleKeyPress: Model -> KeyCode -> Model
 handleKeyPress model keyCode =
@@ -86,3 +88,6 @@ subscriptions model =
     ]
 
 
+
+-- port for sending model out to be stored
+port store : Model -> Cmd msg

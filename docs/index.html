@@ -5,4 +5,7 @@
     const model = localStorage.getItem('model')
     const startingModel = model ? JSON.parse(model) : null
     var app = Elm.Main.embed(node, startingModel);
+    app.ports.store.subscribe(function (state) {
+        localStorage.setItem('model', JSON.stringify(state))
+    });
 </script>
