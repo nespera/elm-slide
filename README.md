@@ -1,3 +1,5 @@
 # elm-slide
 
-I'm going to try to make a Klotski game (see https://en.wikipedia.org/wiki/Klotski)
+A Klotski game (see https://en.wikipedia.org/wiki/Klotski)  
+
+Play it online here: https://nespera.github.io/elm-slide/
