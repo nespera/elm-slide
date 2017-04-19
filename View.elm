@@ -16,20 +16,21 @@ view model =
   in
     Html.div [HtmlAttr.style [("padding", "20px")]] [
       Html.div [] [
-        svg [version "1.1", width "80vmin", height "80vmin", x "0", y "0", viewBox viewBoxSize]
+        svg [version "1.1", width "75vmin", height "75vmin", x "0", y "0", viewBox viewBoxSize]
           ([(renderBoard model), (renderExit model)] ++ (renderPieces model))
       ],
       Html.div [] [
-          (if (gameOver model) then gameOverMessage else instructions), resetLink
+          (if (gameOver model) then gameOverMessage else (instructions model)), resetLink
       ]
     ]
 
 textStyle = HtmlAttr.style [("font-family", "Verdana, Sans")]
 
-instructions: Html Msg
-instructions =
+instructions: Model -> Html Msg
+instructions model =
     Html.p [textStyle]
-        [text "Get the red block to the exit at the bottom. Choose block by letter or with mouse, move with arrows keys."]
+        [text ("Playing " ++ model.name ++ ". Get the red block to the exit at the bottom." ++
+        " Choose block by letter or with mouse, move with arrows keys.")]
 
 gameOverMessage: Html Msg
 gameOverMessage =
@@ -38,7 +39,11 @@ gameOverMessage =
 resetLink: Html Msg
 resetLink =
     Html.p [textStyle]
-        [Html.a [HtmlAttr.href "#", HtmlEv.onClick Reset][text "Start again"]]
+        [
+        Html.a [HtmlAttr.href "#classic", HtmlEv.onClick (Reset "classic")][text "Start again (Classic)"],
+        text " | ",
+        Html.a [HtmlAttr.href "#easy", HtmlEv.onClick (Reset "easy")][text "Start again (Easy)"]
+        ]
 
 renderBoard: Model -> Svg Msg
 renderBoard model =

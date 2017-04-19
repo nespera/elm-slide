@@ -14,34 +14,61 @@ big = {width = 2, height = 2, color = "crimson"}
 small: Shape
 small = {width = 1, height = 1, color = "green"}
 
+wideRed: Shape
+wideRed = {width = 2, height = 1, color = "red"}
+
 tall: Shape
 tall = {width = 1, height = 2, color = "teal"}
 
 wide: Shape
 wide = {width = 2, height = 1, color = "orange"}
 
-initial : Model
-initial =
-  {
-    name = "Classic Klotski",
-    numRows = 5,
-    numCols = 4,
-    active = "a",
-    king = "a",
-    winningPos = {r = 3, c = 1},
-    pieces = [
-        {name = "a", shape = big, position = {r = 0, c = 1}},
-        {name = "b", shape = tall, position = {r = 0, c = 0}},
-        {name = "c", shape = tall, position = {r = 0, c = 3}},
-        {name = "d", shape = tall, position = {r = 2, c = 0}},
-        {name = "e", shape = tall, position = {r = 2, c = 3}},
-        {name = "f", shape = wide, position = {r = 2, c = 1}},
-        {name = "g", shape = small, position = {r = 4, c = 0}},
-        {name = "h", shape = small, position = {r = 3, c = 1}},
-        {name = "i", shape = small, position = {r = 3, c = 2}},
-        {name = "j", shape = small, position = {r = 4, c = 3}}
-        ]
-  }
+initial : String -> Model
+initial choice =
+ case choice of
+   "easy" ->
+         {
+           name = "Easy",
+           numRows = 5,
+           numCols = 4,
+           active = "a",
+           king = "a",
+           winningPos = {r = 4, c = 1},
+           pieces = [
+               {name = "a", shape = wideRed, position = {r = 0, c = 1}},
+               {name = "b", shape = small, position = {r = 0, c = 0}},
+               {name = "c", shape = small, position = {r = 0, c = 3}},
+               {name = "d", shape = tall, position = {r = 1, c = 0}},
+               {name = "e", shape = tall, position = {r = 1, c = 1}},
+               {name = "f", shape = tall, position = {r = 1, c = 2}},
+               {name = "g", shape = tall, position = {r = 1, c = 3}},
+               {name = "h", shape = wide, position = {r = 3, c = 1}},
+               {name = "i", shape = small, position = {r = 3, c = 0}},
+               {name = "j", shape = small, position = {r = 3, c = 3}},
+               {name = "k", shape = small, position = {r = 4, c = 3}}
+               ]
+         }
+   _ ->
+      {
+        name = "Classic Klotski",
+        numRows = 5,
+        numCols = 4,
+        active = "a",
+        king = "a",
+        winningPos = {r = 3, c = 1},
+        pieces = [
+            {name = "a", shape = big, position = {r = 0, c = 1}},
+            {name = "b", shape = tall, position = {r = 0, c = 0}},
+            {name = "c", shape = tall, position = {r = 0, c = 3}},
+            {name = "d", shape = tall, position = {r = 2, c = 0}},
+            {name = "e", shape = tall, position = {r = 2, c = 3}},
+            {name = "f", shape = wide, position = {r = 2, c = 1}},
+            {name = "g", shape = small, position = {r = 4, c = 0}},
+            {name = "h", shape = small, position = {r = 3, c = 1}},
+            {name = "i", shape = small, position = {r = 3, c = 2}},
+            {name = "j", shape = small, position = {r = 4, c = 3}}
+            ]
+      }
 
 getPiece: Model -> String -> Maybe Piece
 getPiece model name =

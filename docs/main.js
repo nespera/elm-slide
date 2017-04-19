@@ -9647,86 +9647,100 @@ var _nespera$elm_slide$Model$gameOver = function (model) {
 };
 var _nespera$elm_slide$Model$wide = {width: 2, height: 1, color: 'orange'};
 var _nespera$elm_slide$Model$tall = {width: 1, height: 2, color: 'teal'};
+var _nespera$elm_slide$Model$wideRed = {width: 2, height: 1, color: 'red'};
 var _nespera$elm_slide$Model$small = {width: 1, height: 1, color: 'green'};
 var _nespera$elm_slide$Model$big = {width: 2, height: 2, color: 'crimson'};
-var _nespera$elm_slide$Model$initial = {
-	name: 'Classic Klotski',
-	numRows: 5,
-	numCols: 4,
-	active: 'a',
-	king: 'a',
-	winningPos: {r: 3, c: 1},
-	pieces: {
-		ctor: '::',
-		_0: {
-			name: 'a',
-			shape: _nespera$elm_slide$Model$big,
-			position: {r: 0, c: 1}
-		},
-		_1: {
-			ctor: '::',
-			_0: {
-				name: 'b',
-				shape: _nespera$elm_slide$Model$tall,
-				position: {r: 0, c: 0}
-			},
-			_1: {
+var _nespera$elm_slide$Model$initial = function (choice) {
+	var _p7 = choice;
+	if (_p7 === 'easy') {
+		return {
+			name: 'Easy',
+			numRows: 5,
+			numCols: 4,
+			active: 'a',
+			king: 'a',
+			winningPos: {r: 4, c: 1},
+			pieces: {
 				ctor: '::',
 				_0: {
-					name: 'c',
-					shape: _nespera$elm_slide$Model$tall,
-					position: {r: 0, c: 3}
+					name: 'a',
+					shape: _nespera$elm_slide$Model$wideRed,
+					position: {r: 0, c: 1}
 				},
 				_1: {
 					ctor: '::',
 					_0: {
-						name: 'd',
-						shape: _nespera$elm_slide$Model$tall,
-						position: {r: 2, c: 0}
+						name: 'b',
+						shape: _nespera$elm_slide$Model$small,
+						position: {r: 0, c: 0}
 					},
 					_1: {
 						ctor: '::',
 						_0: {
-							name: 'e',
-							shape: _nespera$elm_slide$Model$tall,
-							position: {r: 2, c: 3}
+							name: 'c',
+							shape: _nespera$elm_slide$Model$small,
+							position: {r: 0, c: 3}
 						},
 						_1: {
 							ctor: '::',
 							_0: {
-								name: 'f',
-								shape: _nespera$elm_slide$Model$wide,
-								position: {r: 2, c: 1}
+								name: 'd',
+								shape: _nespera$elm_slide$Model$tall,
+								position: {r: 1, c: 0}
 							},
 							_1: {
 								ctor: '::',
 								_0: {
-									name: 'g',
-									shape: _nespera$elm_slide$Model$small,
-									position: {r: 4, c: 0}
+									name: 'e',
+									shape: _nespera$elm_slide$Model$tall,
+									position: {r: 1, c: 1}
 								},
 								_1: {
 									ctor: '::',
 									_0: {
-										name: 'h',
-										shape: _nespera$elm_slide$Model$small,
-										position: {r: 3, c: 1}
+										name: 'f',
+										shape: _nespera$elm_slide$Model$tall,
+										position: {r: 1, c: 2}
 									},
 									_1: {
 										ctor: '::',
 										_0: {
-											name: 'i',
-											shape: _nespera$elm_slide$Model$small,
-											position: {r: 3, c: 2}
+											name: 'g',
+											shape: _nespera$elm_slide$Model$tall,
+											position: {r: 1, c: 3}
 										},
 										_1: {
 											ctor: '::',
 											_0: {
-												name: 'j',
-												shape: _nespera$elm_slide$Model$small,
-												position: {r: 4, c: 3}
+												name: 'h',
+												shape: _nespera$elm_slide$Model$wide,
+												position: {r: 3, c: 1}
 											},
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: {
+													name: 'i',
+													shape: _nespera$elm_slide$Model$small,
+													position: {r: 3, c: 0}
+												},
+												_1: {
+													ctor: '::',
+													_0: {
+														name: 'j',
+														shape: _nespera$elm_slide$Model$small,
+														position: {r: 3, c: 3}
+													},
+													_1: {
+														ctor: '::',
+														_0: {
+															name: 'k',
+															shape: _nespera$elm_slide$Model$small,
+															position: {r: 4, c: 3}
+														},
+														_1: {ctor: '[]'}
+													}
+												}
+											}
 										}
 									}
 								}
@@ -9735,7 +9749,97 @@ var _nespera$elm_slide$Model$initial = {
 					}
 				}
 			}
-		}
+		};
+	} else {
+		return {
+			name: 'Classic Klotski',
+			numRows: 5,
+			numCols: 4,
+			active: 'a',
+			king: 'a',
+			winningPos: {r: 3, c: 1},
+			pieces: {
+				ctor: '::',
+				_0: {
+					name: 'a',
+					shape: _nespera$elm_slide$Model$big,
+					position: {r: 0, c: 1}
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						name: 'b',
+						shape: _nespera$elm_slide$Model$tall,
+						position: {r: 0, c: 0}
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							name: 'c',
+							shape: _nespera$elm_slide$Model$tall,
+							position: {r: 0, c: 3}
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								name: 'd',
+								shape: _nespera$elm_slide$Model$tall,
+								position: {r: 2, c: 0}
+							},
+							_1: {
+								ctor: '::',
+								_0: {
+									name: 'e',
+									shape: _nespera$elm_slide$Model$tall,
+									position: {r: 2, c: 3}
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										name: 'f',
+										shape: _nespera$elm_slide$Model$wide,
+										position: {r: 2, c: 1}
+									},
+									_1: {
+										ctor: '::',
+										_0: {
+											name: 'g',
+											shape: _nespera$elm_slide$Model$small,
+											position: {r: 4, c: 0}
+										},
+										_1: {
+											ctor: '::',
+											_0: {
+												name: 'h',
+												shape: _nespera$elm_slide$Model$small,
+												position: {r: 3, c: 1}
+											},
+											_1: {
+												ctor: '::',
+												_0: {
+													name: 'i',
+													shape: _nespera$elm_slide$Model$small,
+													position: {r: 3, c: 2}
+												},
+												_1: {
+													ctor: '::',
+													_0: {
+														name: 'j',
+														shape: _nespera$elm_slide$Model$small,
+														position: {r: 4, c: 3}
+													},
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		};
 	}
 };
 var _nespera$elm_slide$Model$Piece = F3(
@@ -9755,7 +9859,9 @@ var _nespera$elm_slide$Model$Model = F7(
 		return {name: a, numRows: b, numCols: c, pieces: d, active: e, king: f, winningPos: g};
 	});
 
-var _nespera$elm_slide$Msg$Reset = {ctor: 'Reset'};
+var _nespera$elm_slide$Msg$Reset = function (a) {
+	return {ctor: 'Reset', _0: a};
+};
 var _nespera$elm_slide$Msg$Pressed = function (a) {
 	return {ctor: 'Pressed', _0: a};
 };
@@ -9984,18 +10090,27 @@ var _nespera$elm_slide$View$textStyle = _elm_lang$html$Html_Attributes$style(
 		_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'Verdana, Sans'},
 		_1: {ctor: '[]'}
 	});
-var _nespera$elm_slide$View$instructions = A2(
-	_elm_lang$html$Html$p,
-	{
-		ctor: '::',
-		_0: _nespera$elm_slide$View$textStyle,
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _elm_lang$svg$Svg$text('Get the red block to the exit at the bottom. Choose block by letter or with mouse, move with arrows keys.'),
-		_1: {ctor: '[]'}
-	});
+var _nespera$elm_slide$View$instructions = function (model) {
+	return A2(
+		_elm_lang$html$Html$p,
+		{
+			ctor: '::',
+			_0: _nespera$elm_slide$View$textStyle,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$svg$Svg$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'Playing ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						model.name,
+						A2(_elm_lang$core$Basics_ops['++'], '. Get the red block to the exit at the bottom.', ' Choose block by letter or with mouse, move with arrows keys.')))),
+			_1: {ctor: '[]'}
+		});
+};
 var _nespera$elm_slide$View$resetLink = A2(
 	_elm_lang$html$Html$p,
 	{
@@ -10009,19 +10124,44 @@ var _nespera$elm_slide$View$resetLink = A2(
 			_elm_lang$html$Html$a,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$href('#'),
+				_0: _elm_lang$html$Html_Attributes$href('#classic'),
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(_nespera$elm_slide$Msg$Reset),
+					_0: _elm_lang$html$Html_Events$onClick(
+						_nespera$elm_slide$Msg$Reset('classic')),
 					_1: {ctor: '[]'}
 				}
 			},
 			{
 				ctor: '::',
-				_0: _elm_lang$svg$Svg$text('Start again'),
+				_0: _elm_lang$svg$Svg$text('Start again (Classic)'),
 				_1: {ctor: '[]'}
 			}),
-		_1: {ctor: '[]'}
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$svg$Svg$text(' | '),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$a,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href('#easy'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(
+								_nespera$elm_slide$Msg$Reset('easy')),
+							_1: {ctor: '[]'}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg$text('Start again (Easy)'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		}
 	});
 var _nespera$elm_slide$View$view = function (model) {
 	var viewBoxSize = A2(
@@ -10062,10 +10202,10 @@ var _nespera$elm_slide$View$view = function (model) {
 							_0: _elm_lang$svg$Svg_Attributes$version('1.1'),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$width('80vmin'),
+								_0: _elm_lang$svg$Svg_Attributes$width('75vmin'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$height('80vmin'),
+									_0: _elm_lang$svg$Svg_Attributes$height('75vmin'),
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$svg$Svg_Attributes$x('0'),
@@ -10103,7 +10243,7 @@ var _nespera$elm_slide$View$view = function (model) {
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _nespera$elm_slide$Model$gameOver(model) ? _nespera$elm_slide$View$gameOverMessage : _nespera$elm_slide$View$instructions,
+						_0: _nespera$elm_slide$Model$gameOver(model) ? _nespera$elm_slide$View$gameOverMessage : _nespera$elm_slide$View$instructions(model),
 						_1: {
 							ctor: '::',
 							_0: _nespera$elm_slide$View$resetLink,
@@ -10176,7 +10316,11 @@ var _nespera$elm_slide$Main$init = function (flag) {
 	if (_p3.ctor === 'Just') {
 		return {ctor: '_Tuple2', _0: _p3._0, _1: _elm_lang$core$Platform_Cmd$none};
 	} else {
-		return {ctor: '_Tuple2', _0: _nespera$elm_slide$Model$initial, _1: _elm_lang$core$Platform_Cmd$none};
+		return {
+			ctor: '_Tuple2',
+			_0: _nespera$elm_slide$Model$initial('classic'),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
 	}
 };
 var _nespera$elm_slide$Main$store = _elm_lang$core$Native_Platform.outgoingPort(
@@ -10251,7 +10395,7 @@ var _nespera$elm_slide$Main$update = F2(
 			default:
 				return {
 					ctor: '_Tuple2',
-					_0: _nespera$elm_slide$Model$initial,
+					_0: _nespera$elm_slide$Model$initial(_p5._0),
 					_1: _nespera$elm_slide$Main$store(model)
 				};
 		}

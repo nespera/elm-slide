@@ -22,7 +22,7 @@ init flag =
         Just m ->
             ( m, Cmd.none )
         Nothing ->
-            ( Model.initial, Cmd.none )
+            ( Model.initial "classic", Cmd.none )
 
 -- UPDATE
 
@@ -40,8 +40,8 @@ update msg model =
         if (Model.gameOver model)
         then (model, Cmd.none)
         else (handleKeyPress model keyCode, store model)
-      Reset ->
-        (Model.initial, store model)
+      Reset choice->
+        (Model.initial choice, store model)
 
 handleKeyPress: Model -> KeyCode -> Model
 handleKeyPress model keyCode =
