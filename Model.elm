@@ -15,7 +15,7 @@ small: Shape
 small = {width = 1, height = 1, color = "green"}
 
 wideRed: Shape
-wideRed = {width = 2, height = 1, color = "red"}
+wideRed = {width = 2, height = 1, color = "crimson"}
 
 tall: Shape
 tall = {width = 1, height = 2, color = "teal"}

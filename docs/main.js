@@ -9647,7 +9647,7 @@ var _nespera$elm_slide$Model$gameOver = function (model) {
 };
 var _nespera$elm_slide$Model$wide = {width: 2, height: 1, color: 'orange'};
 var _nespera$elm_slide$Model$tall = {width: 1, height: 2, color: 'teal'};
-var _nespera$elm_slide$Model$wideRed = {width: 2, height: 1, color: 'red'};
+var _nespera$elm_slide$Model$wideRed = {width: 2, height: 1, color: 'crimson'};
 var _nespera$elm_slide$Model$small = {width: 1, height: 1, color: 'green'};
 var _nespera$elm_slide$Model$big = {width: 2, height: 2, color: 'crimson'};
 var _nespera$elm_slide$Model$initial = function (choice) {
