@@ -9597,6 +9597,20 @@ var _nespera$elm_slide$Model$noOverlaps = function (model) {
 		_elm_lang$core$List$length(allCoverage),
 		_elm_lang$core$List$length(noDupes));
 };
+var _nespera$elm_slide$Model$onTheBoard = F2(
+	function (model, pos) {
+		return (_elm_lang$core$Native_Utils.cmp(pos.r, 0) > -1) && ((_elm_lang$core$Native_Utils.cmp(pos.r, model.numRows) < 0) && ((_elm_lang$core$Native_Utils.cmp(pos.c, 0) > -1) && (_elm_lang$core$Native_Utils.cmp(pos.c, model.numCols) < 0)));
+	});
+var _nespera$elm_slide$Model$noneOutsideBoard = function (model) {
+	var positions = A2(_elm_lang$core$List$concatMap, _nespera$elm_slide$Model$coverage, model.pieces);
+	return A2(
+		_elm_lang$core$List$all,
+		_nespera$elm_slide$Model$onTheBoard(model),
+		positions);
+};
+var _nespera$elm_slide$Model$valid = function (model) {
+	return _nespera$elm_slide$Model$noneOutsideBoard(model) && _nespera$elm_slide$Model$noOverlaps(model);
+};
 var _nespera$elm_slide$Model$updatePiece = F2(
 	function (model, movedPiece) {
 		var otherPieces = A2(
@@ -9620,11 +9634,10 @@ var _nespera$elm_slide$Model$getPiece = F2(
 				model.pieces));
 	});
 var _nespera$elm_slide$Model$gameOver = function (model) {
-	var king = A2(_nespera$elm_slide$Model$getPiece, model, 'a');
+	var king = A2(_nespera$elm_slide$Model$getPiece, model, model.king);
 	var _p6 = king;
 	if (_p6.ctor === 'Just') {
-		var _p7 = _p6._0;
-		return _elm_lang$core$Native_Utils.eq(_p7.position.c, 1) && _elm_lang$core$Native_Utils.eq(_p7.position.r, 3);
+		return _elm_lang$core$Native_Utils.eq(_p6._0.position, model.winningPos);
 	} else {
 		return false;
 	}
@@ -9634,6 +9647,12 @@ var _nespera$elm_slide$Model$tall = {width: 1, height: 2, color: 'teal'};
 var _nespera$elm_slide$Model$small = {width: 1, height: 1, color: 'green'};
 var _nespera$elm_slide$Model$big = {width: 2, height: 2, color: 'crimson'};
 var _nespera$elm_slide$Model$initial = {
+	name: 'Classic Klotski',
+	numRows: 5,
+	numCols: 4,
+	active: 'a',
+	king: 'a',
+	winningPos: {r: 3, c: 1},
 	pieces: {
 		ctor: '::',
 		_0: {
@@ -9714,20 +9733,7 @@ var _nespera$elm_slide$Model$initial = {
 				}
 			}
 		}
-	},
-	active: 'a'
-};
-var _nespera$elm_slide$Model$numCols = 4;
-var _nespera$elm_slide$Model$numRows = 5;
-var _nespera$elm_slide$Model$onTheBoard = function (pos) {
-	return (_elm_lang$core$Native_Utils.cmp(pos.r, 0) > -1) && ((_elm_lang$core$Native_Utils.cmp(pos.r, _nespera$elm_slide$Model$numRows) < 0) && ((_elm_lang$core$Native_Utils.cmp(pos.c, 0) > -1) && (_elm_lang$core$Native_Utils.cmp(pos.c, _nespera$elm_slide$Model$numCols) < 0)));
-};
-var _nespera$elm_slide$Model$noneOutsideBoard = function (model) {
-	var positions = A2(_elm_lang$core$List$concatMap, _nespera$elm_slide$Model$coverage, model.pieces);
-	return A2(_elm_lang$core$List$all, _nespera$elm_slide$Model$onTheBoard, positions);
-};
-var _nespera$elm_slide$Model$valid = function (model) {
-	return _nespera$elm_slide$Model$noneOutsideBoard(model) && _nespera$elm_slide$Model$noOverlaps(model);
+	}
 };
 var _nespera$elm_slide$Model$Piece = F3(
 	function (a, b, c) {
@@ -9741,9 +9747,9 @@ var _nespera$elm_slide$Model$Position = F2(
 	function (a, b) {
 		return {r: a, c: b};
 	});
-var _nespera$elm_slide$Model$Model = F2(
-	function (a, b) {
-		return {pieces: a, active: b};
+var _nespera$elm_slide$Model$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {name: a, numRows: b, numCols: c, pieces: d, active: e, king: f, winningPos: g};
 	});
 
 var _nespera$elm_slide$Msg$Reset = {ctor: 'Reset'};
@@ -10135,6 +10141,9 @@ var _nespera$elm_slide$Main$store = _elm_lang$core$Native_Platform.outgoingPort(
 	'store',
 	function (v) {
 		return {
+			name: v.name,
+			numRows: v.numRows,
+			numCols: v.numCols,
 			pieces: _elm_lang$core$Native_List.toArray(v.pieces).map(
 				function (v) {
 					return {
@@ -10143,7 +10152,9 @@ var _nespera$elm_slide$Main$store = _elm_lang$core$Native_Platform.outgoingPort(
 						position: {r: v.position.r, c: v.position.c}
 					};
 				}),
-			active: v.active
+			active: v.active,
+			king: v.king,
+			winningPos: {r: v.winningPos.r, c: v.winningPos.c}
 		};
 	});
 var _nespera$elm_slide$Main$Left = {ctor: 'Left'};
@@ -10223,64 +10234,103 @@ var _nespera$elm_slide$Main$main = _elm_lang$html$Html$programWithFlags(
 						function (active) {
 							return A2(
 								_elm_lang$core$Json_Decode$andThen,
-								function (pieces) {
-									return _elm_lang$core$Json_Decode$succeed(
-										{active: active, pieces: pieces});
-								},
-								A2(
-									_elm_lang$core$Json_Decode$field,
-									'pieces',
-									_elm_lang$core$Json_Decode$list(
-										A2(
-											_elm_lang$core$Json_Decode$andThen,
-											function (name) {
-												return A2(
-													_elm_lang$core$Json_Decode$andThen,
-													function (position) {
-														return A2(
-															_elm_lang$core$Json_Decode$andThen,
-															function (shape) {
-																return _elm_lang$core$Json_Decode$succeed(
-																	{name: name, position: position, shape: shape});
-															},
-															A2(
-																_elm_lang$core$Json_Decode$field,
-																'shape',
+								function (king) {
+									return A2(
+										_elm_lang$core$Json_Decode$andThen,
+										function (name) {
+											return A2(
+												_elm_lang$core$Json_Decode$andThen,
+												function (numCols) {
+													return A2(
+														_elm_lang$core$Json_Decode$andThen,
+														function (numRows) {
+															return A2(
+																_elm_lang$core$Json_Decode$andThen,
+																function (pieces) {
+																	return A2(
+																		_elm_lang$core$Json_Decode$andThen,
+																		function (winningPos) {
+																			return _elm_lang$core$Json_Decode$succeed(
+																				{active: active, king: king, name: name, numCols: numCols, numRows: numRows, pieces: pieces, winningPos: winningPos});
+																		},
+																		A2(
+																			_elm_lang$core$Json_Decode$field,
+																			'winningPos',
+																			A2(
+																				_elm_lang$core$Json_Decode$andThen,
+																				function (c) {
+																					return A2(
+																						_elm_lang$core$Json_Decode$andThen,
+																						function (r) {
+																							return _elm_lang$core$Json_Decode$succeed(
+																								{c: c, r: r});
+																						},
+																						A2(_elm_lang$core$Json_Decode$field, 'r', _elm_lang$core$Json_Decode$int));
+																				},
+																				A2(_elm_lang$core$Json_Decode$field, 'c', _elm_lang$core$Json_Decode$int))));
+																},
 																A2(
-																	_elm_lang$core$Json_Decode$andThen,
-																	function (color) {
-																		return A2(
+																	_elm_lang$core$Json_Decode$field,
+																	'pieces',
+																	_elm_lang$core$Json_Decode$list(
+																		A2(
 																			_elm_lang$core$Json_Decode$andThen,
-																			function (height) {
+																			function (name) {
 																				return A2(
 																					_elm_lang$core$Json_Decode$andThen,
-																					function (width) {
-																						return _elm_lang$core$Json_Decode$succeed(
-																							{color: color, height: height, width: width});
+																					function (position) {
+																						return A2(
+																							_elm_lang$core$Json_Decode$andThen,
+																							function (shape) {
+																								return _elm_lang$core$Json_Decode$succeed(
+																									{name: name, position: position, shape: shape});
+																							},
+																							A2(
+																								_elm_lang$core$Json_Decode$field,
+																								'shape',
+																								A2(
+																									_elm_lang$core$Json_Decode$andThen,
+																									function (color) {
+																										return A2(
+																											_elm_lang$core$Json_Decode$andThen,
+																											function (height) {
+																												return A2(
+																													_elm_lang$core$Json_Decode$andThen,
+																													function (width) {
+																														return _elm_lang$core$Json_Decode$succeed(
+																															{color: color, height: height, width: width});
+																													},
+																													A2(_elm_lang$core$Json_Decode$field, 'width', _elm_lang$core$Json_Decode$int));
+																											},
+																											A2(_elm_lang$core$Json_Decode$field, 'height', _elm_lang$core$Json_Decode$int));
+																									},
+																									A2(_elm_lang$core$Json_Decode$field, 'color', _elm_lang$core$Json_Decode$string))));
 																					},
-																					A2(_elm_lang$core$Json_Decode$field, 'width', _elm_lang$core$Json_Decode$int));
+																					A2(
+																						_elm_lang$core$Json_Decode$field,
+																						'position',
+																						A2(
+																							_elm_lang$core$Json_Decode$andThen,
+																							function (c) {
+																								return A2(
+																									_elm_lang$core$Json_Decode$andThen,
+																									function (r) {
+																										return _elm_lang$core$Json_Decode$succeed(
+																											{c: c, r: r});
+																									},
+																									A2(_elm_lang$core$Json_Decode$field, 'r', _elm_lang$core$Json_Decode$int));
+																							},
+																							A2(_elm_lang$core$Json_Decode$field, 'c', _elm_lang$core$Json_Decode$int))));
 																			},
-																			A2(_elm_lang$core$Json_Decode$field, 'height', _elm_lang$core$Json_Decode$int));
-																	},
-																	A2(_elm_lang$core$Json_Decode$field, 'color', _elm_lang$core$Json_Decode$string))));
-													},
-													A2(
-														_elm_lang$core$Json_Decode$field,
-														'position',
-														A2(
-															_elm_lang$core$Json_Decode$andThen,
-															function (c) {
-																return A2(
-																	_elm_lang$core$Json_Decode$andThen,
-																	function (r) {
-																		return _elm_lang$core$Json_Decode$succeed(
-																			{c: c, r: r});
-																	},
-																	A2(_elm_lang$core$Json_Decode$field, 'r', _elm_lang$core$Json_Decode$int));
-															},
-															A2(_elm_lang$core$Json_Decode$field, 'c', _elm_lang$core$Json_Decode$int))));
-											},
-											A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string)))));
+																			A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string)))));
+														},
+														A2(_elm_lang$core$Json_Decode$field, 'numRows', _elm_lang$core$Json_Decode$int));
+												},
+												A2(_elm_lang$core$Json_Decode$field, 'numCols', _elm_lang$core$Json_Decode$int));
+										},
+										A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
+								},
+								A2(_elm_lang$core$Json_Decode$field, 'king', _elm_lang$core$Json_Decode$string));
 						},
 						A2(_elm_lang$core$Json_Decode$field, 'active', _elm_lang$core$Json_Decode$string))),
 				_1: {ctor: '[]'}

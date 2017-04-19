@@ -5,10 +5,8 @@ import Set
 type alias Piece = { name: String, shape: Shape, position: Position}
 type alias Shape = {width : Int, height : Int, color: String}
 type alias Position = { r: Int, c: Int }
-type alias Model = {pieces: List Piece, active: String}
-
-numRows = 5
-numCols = 4
+type alias Model = {name:String, numRows: Int, numCols: Int, pieces: List Piece, active: String,
+  king: String, winningPos: Position}
 
 big: Shape
 big = {width = 2, height = 2, color = "crimson"}
@@ -24,18 +22,26 @@ wide = {width = 2, height = 1, color = "orange"}
 
 initial : Model
 initial =
-  {pieces = [
-    {name = "a", shape = big, position = {r = 0, c = 1}},
-    {name = "b", shape = tall, position = {r = 0, c = 0}},
-    {name = "c", shape = tall, position = {r = 0, c = 3}},
-    {name = "d", shape = tall, position = {r = 2, c = 0}},
-    {name = "e", shape = tall, position = {r = 2, c = 3}},
-    {name = "f", shape = wide, position = {r = 2, c = 1}},
-    {name = "g", shape = small, position = {r = 4, c = 0}},
-    {name = "h", shape = small, position = {r = 3, c = 1}},
-    {name = "i", shape = small, position = {r = 3, c = 2}},
-    {name = "j", shape = small, position = {r = 4, c = 3}}
-  ], active = "a"}
+  {
+    name = "Classic Klotski",
+    numRows = 5,
+    numCols = 4,
+    active = "a",
+    king = "a",
+    winningPos = {r = 3, c = 1},
+    pieces = [
+        {name = "a", shape = big, position = {r = 0, c = 1}},
+        {name = "b", shape = tall, position = {r = 0, c = 0}},
+        {name = "c", shape = tall, position = {r = 0, c = 3}},
+        {name = "d", shape = tall, position = {r = 2, c = 0}},
+        {name = "e", shape = tall, position = {r = 2, c = 3}},
+        {name = "f", shape = wide, position = {r = 2, c = 1}},
+        {name = "g", shape = small, position = {r = 4, c = 0}},
+        {name = "h", shape = small, position = {r = 3, c = 1}},
+        {name = "i", shape = small, position = {r = 3, c = 2}},
+        {name = "j", shape = small, position = {r = 4, c = 3}}
+        ]
+  }
 
 getPiece: Model -> String -> Maybe Piece
 getPiece model name =
@@ -57,11 +63,11 @@ noneOutsideBoard model =
   let
     positions = List.concatMap coverage (model.pieces)
   in
-    List.all onTheBoard positions
+    List.all (onTheBoard model) positions
 
-onTheBoard: Position -> Bool
-onTheBoard pos =
-  pos.r >= 0 && pos.r < numRows && pos.c >= 0 && pos.c < numCols
+onTheBoard: Model -> Position -> Bool
+onTheBoard model pos =
+  pos.r >= 0 && pos.r < model.numRows && pos.c >= 0 && pos.c < model.numCols
 
 noOverlaps: Model -> Bool
 noOverlaps model =
@@ -105,10 +111,10 @@ dropDuplicates list =
 gameOver: Model -> Bool
 gameOver model =
   let
-    king = getPiece model "a"
+    king = getPiece model model.king
    in
      case king of
-       Just piece -> piece.position.c == 1 && piece.position.r == 3
+       Just piece -> piece.position == model.winningPos
        _ -> False
 
 isCalled: String -> Piece -> Bool
