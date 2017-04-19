@@ -10124,7 +10124,7 @@ var _nespera$elm_slide$View$resetLink = A2(
 			_elm_lang$html$Html$a,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$href('#classic'),
+				_0: _elm_lang$html$Html_Attributes$href('#'),
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$html$Html_Events$onClick(
@@ -10146,7 +10146,7 @@ var _nespera$elm_slide$View$resetLink = A2(
 					_elm_lang$html$Html$a,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$href('#easy'),
+						_0: _elm_lang$html$Html_Attributes$href('#'),
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$html$Html_Events$onClick(

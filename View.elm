@@ -40,9 +40,9 @@ resetLink: Html Msg
 resetLink =
     Html.p [textStyle]
         [
-        Html.a [HtmlAttr.href "#classic", HtmlEv.onClick (Reset "classic")][text "Start again (Classic)"],
+        Html.a [HtmlAttr.href "#", HtmlEv.onClick (Reset "classic")][text "Start again (Classic)"],
         text " | ",
-        Html.a [HtmlAttr.href "#easy", HtmlEv.onClick (Reset "easy")][text "Start again (Easy)"]
+        Html.a [HtmlAttr.href "#", HtmlEv.onClick (Reset "easy")][text "Start again (Easy)"]
         ]
 
 renderBoard: Model -> Svg Msg
