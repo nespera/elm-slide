@@ -9633,8 +9633,11 @@ var _nespera$elm_slide$Model$getPiece = F2(
 				_nespera$elm_slide$Model$isCalled(name),
 				model.pieces));
 	});
+var _nespera$elm_slide$Model$getKing = function (model) {
+	return A2(_nespera$elm_slide$Model$getPiece, model, model.king);
+};
 var _nespera$elm_slide$Model$gameOver = function (model) {
-	var king = A2(_nespera$elm_slide$Model$getPiece, model, model.king);
+	var king = _nespera$elm_slide$Model$getKing(model);
 	var _p6 = king;
 	if (_p6.ctor === 'Just') {
 		return _elm_lang$core$Native_Utils.eq(_p6._0.position, model.winningPos);
@@ -9670,67 +9673,11 @@ var _nespera$elm_slide$Model$initial = {
 			_1: {
 				ctor: '::',
 				_0: {
-					name: 'c',
-					shape: _nespera$elm_slide$Model$tall,
-					position: {r: 0, c: 3}
+					name: 'j',
+					shape: _nespera$elm_slide$Model$small,
+					position: {r: 4, c: 3}
 				},
-				_1: {
-					ctor: '::',
-					_0: {
-						name: 'd',
-						shape: _nespera$elm_slide$Model$tall,
-						position: {r: 2, c: 0}
-					},
-					_1: {
-						ctor: '::',
-						_0: {
-							name: 'e',
-							shape: _nespera$elm_slide$Model$tall,
-							position: {r: 2, c: 3}
-						},
-						_1: {
-							ctor: '::',
-							_0: {
-								name: 'f',
-								shape: _nespera$elm_slide$Model$wide,
-								position: {r: 2, c: 1}
-							},
-							_1: {
-								ctor: '::',
-								_0: {
-									name: 'g',
-									shape: _nespera$elm_slide$Model$small,
-									position: {r: 4, c: 0}
-								},
-								_1: {
-									ctor: '::',
-									_0: {
-										name: 'h',
-										shape: _nespera$elm_slide$Model$small,
-										position: {r: 3, c: 1}
-									},
-									_1: {
-										ctor: '::',
-										_0: {
-											name: 'i',
-											shape: _nespera$elm_slide$Model$small,
-											position: {r: 3, c: 2}
-										},
-										_1: {
-											ctor: '::',
-											_0: {
-												name: 'j',
-												shape: _nespera$elm_slide$Model$small,
-												position: {r: 4, c: 3}
-											},
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+				_1: {ctor: '[]'}
 			}
 		}
 	}
@@ -9896,48 +9843,60 @@ var _nespera$elm_slide$View$renderPieces = function (model) {
 		_nespera$elm_slide$View$renderPiece(model),
 		model.pieces);
 };
-var _nespera$elm_slide$View$renderBoard = {
-	ctor: '::',
-	_0: A2(
-		_elm_lang$svg$Svg$rect,
-		{
-			ctor: '::',
-			_0: _elm_lang$svg$Svg_Attributes$width('400'),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$svg$Svg_Attributes$height('500'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$fill('black'),
-					_1: {ctor: '[]'}
-				}
-			}
-		},
-		{ctor: '[]'}),
-	_1: {
+var _nespera$elm_slide$View$boardHeight = function (model) {
+	return model.numRows * 100;
+};
+var _nespera$elm_slide$View$boardWidth = function (model) {
+	return model.numCols * 100;
+};
+var _nespera$elm_slide$View$renderBoard = function (model) {
+	var h = _elm_lang$core$Basics$toString(
+		_nespera$elm_slide$View$boardHeight(model));
+	var w = _elm_lang$core$Basics$toString(
+		_nespera$elm_slide$View$boardWidth(model));
+	return {
 		ctor: '::',
 		_0: A2(
 			_elm_lang$svg$Svg$rect,
 			{
 				ctor: '::',
-				_0: _elm_lang$svg$Svg_Attributes$x('90'),
+				_0: _elm_lang$svg$Svg_Attributes$width(w),
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$width('220'),
+					_0: _elm_lang$svg$Svg_Attributes$height(h),
 					_1: {
 						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$height('520'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$fill('black'),
-							_1: {ctor: '[]'}
-						}
+						_0: _elm_lang$svg$Svg_Attributes$fill('black'),
+						_1: {ctor: '[]'}
 					}
 				}
 			},
 			{ctor: '[]'}),
-		_1: {ctor: '[]'}
-	}
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$svg$Svg$rect,
+				{
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$x('90'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$width('220'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$height('520'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$fill('black'),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		}
+	};
 };
 var _nespera$elm_slide$View$gameOverMessage = A2(
 	_elm_lang$html$Html$h1,
@@ -10050,7 +10009,7 @@ var _nespera$elm_slide$View$view = function (model) {
 						},
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							_nespera$elm_slide$View$renderBoard,
+							_nespera$elm_slide$View$renderBoard(model),
 							_nespera$elm_slide$View$renderPieces(model))),
 					_1: {ctor: '[]'}
 				}),
@@ -10190,32 +10149,28 @@ var _nespera$elm_slide$Main$handleKeyPress = F2(
 	});
 var _nespera$elm_slide$Main$update = F2(
 	function (msg, model) {
-		if (_nespera$elm_slide$Model$gameOver(model)) {
-			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-		} else {
-			var _p5 = msg;
-			switch (_p5.ctor) {
-				case 'Choose':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{active: _p5._0}),
-						_1: _nespera$elm_slide$Main$store(model)
-					};
-				case 'Pressed':
-					return {
-						ctor: '_Tuple2',
-						_0: A2(_nespera$elm_slide$Main$handleKeyPress, model, _p5._0),
-						_1: _nespera$elm_slide$Main$store(model)
-					};
-				default:
-					return {
-						ctor: '_Tuple2',
-						_0: _nespera$elm_slide$Model$initial,
-						_1: _nespera$elm_slide$Main$store(model)
-					};
-			}
+		var _p5 = msg;
+		switch (_p5.ctor) {
+			case 'Choose':
+				return _nespera$elm_slide$Model$gameOver(model) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{active: _p5._0}),
+					_1: _nespera$elm_slide$Main$store(model)
+				};
+			case 'Pressed':
+				return _nespera$elm_slide$Model$gameOver(model) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : {
+					ctor: '_Tuple2',
+					_0: A2(_nespera$elm_slide$Main$handleKeyPress, model, _p5._0),
+					_1: _nespera$elm_slide$Main$store(model)
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _nespera$elm_slide$Model$initial,
+					_1: _nespera$elm_slide$Main$store(model)
+				};
 		}
 	});
 var _nespera$elm_slide$Main$main = _elm_lang$html$Html$programWithFlags(

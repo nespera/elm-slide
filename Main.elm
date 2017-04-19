@@ -31,14 +31,15 @@ type Direction
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
-  if (Model.gameOver model)
-    then (model, Cmd.none)
-  else
     case msg of
       Choose name ->
-        ({model | active = name}, store model)
+        if (Model.gameOver model)
+        then (model, Cmd.none)
+        else ({model | active = name}, store model)
       Pressed keyCode ->
-        (handleKeyPress model keyCode, store model)
+        if (Model.gameOver model)
+        then (model, Cmd.none)
+        else (handleKeyPress model keyCode, store model)
       Reset ->
         (Model.initial, store model)
 

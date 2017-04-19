@@ -47,6 +47,9 @@ getPiece: Model -> String -> Maybe Piece
 getPiece model name =
   List.head (List.filter (isCalled name) model.pieces)
 
+getKing: Model -> Maybe Piece
+getKing model = getPiece model model.king
+
 updatePiece: Model -> Piece -> Model
 updatePiece model movedPiece =
     let
@@ -111,7 +114,7 @@ dropDuplicates list =
 gameOver: Model -> Bool
 gameOver model =
   let
-    king = getPiece model model.king
+    king = getKing model
    in
      case king of
        Just piece -> piece.position == model.winningPos

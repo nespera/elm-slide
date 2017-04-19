@@ -14,7 +14,7 @@ view model =
   Html.div [HtmlAttr.style [("padding", "20px")]] [
     Html.div [] [
       svg [version "1.1", width "80vmin", height "80vmin", x "0", y "0", viewBox "0 0 400 520"]
-        (renderBoard ++ (renderPieces model))
+        ((renderBoard model) ++ (renderPieces model))
     ],
     Html.div [] [
         (if (gameOver model) then gameOverMessage else instructions), resetLink
@@ -37,11 +37,22 @@ resetLink =
     Html.p [textStyle]
         [Html.a [HtmlAttr.href "#", HtmlEv.onClick Reset][text "Start again"]]
 
-renderBoard: List (Svg Msg)
-renderBoard = [
-    rect [width "400", height "500", fill "black"][] ,
+renderBoard: Model -> List (Svg Msg)
+renderBoard model =
+  let
+    w = toString (boardWidth model)
+    h = toString (boardHeight model)
+  in
+  [
+    rect [width w, height h, fill "black"][] ,
     rect [x "90", width "220", height "520", fill "black"][]
   ]
+
+boardWidth: Model -> Int
+boardWidth model = model.numCols * 100
+
+boardHeight: Model -> Int
+boardHeight model = model.numRows * 100
 
 renderPieces: Model -> List (Svg Msg)
 renderPieces model =
