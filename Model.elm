@@ -1,4 +1,4 @@
-module Model exposing (Model, Position, Piece, valid, initial, gameOver, getPiece, updatePiece)
+module Model exposing (Model, Position, Piece, valid, initial, gameOver, getPiece, getKing, updatePiece)
 
 import Set
 

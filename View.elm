@@ -6,20 +6,23 @@ import Html.Events as HtmlEv
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (onClick)
-import Model exposing (Model, Piece, gameOver)
+import Model exposing (Model, Piece, gameOver, getKing)
 import Msg exposing (..)
 
 view : Model -> Html Msg
 view model =
-  Html.div [HtmlAttr.style [("padding", "20px")]] [
-    Html.div [] [
-      svg [version "1.1", width "80vmin", height "80vmin", x "0", y "0", viewBox "0 0 400 520"]
-        ((renderBoard model) ++ (renderPieces model))
-    ],
-    Html.div [] [
-        (if (gameOver model) then gameOverMessage else instructions), resetLink
+  let
+   viewBoxSize = "0 0 " ++ toString(boardWidth model) ++ " " ++ toString(boardHeight model + 20)
+  in
+    Html.div [HtmlAttr.style [("padding", "20px")]] [
+      Html.div [] [
+        svg [version "1.1", width "80vmin", height "80vmin", x "0", y "0", viewBox viewBoxSize]
+          ([(renderBoard model), (renderExit model)] ++ (renderPieces model))
+      ],
+      Html.div [] [
+          (if (gameOver model) then gameOverMessage else instructions), resetLink
+      ]
     ]
-  ]
 
 textStyle = HtmlAttr.style [("font-family", "Verdana, Sans")]
 
@@ -37,16 +40,23 @@ resetLink =
     Html.p [textStyle]
         [Html.a [HtmlAttr.href "#", HtmlEv.onClick Reset][text "Start again"]]
 
-renderBoard: Model -> List (Svg Msg)
+renderBoard: Model -> Svg Msg
 renderBoard model =
   let
     w = toString (boardWidth model)
     h = toString (boardHeight model)
   in
-  [
-    rect [width w, height h, fill "black"][] ,
-    rect [x "90", width "220", height "520", fill "black"][]
-  ]
+    rect [width w, height h, fill "black"][]
+
+renderExit: Model -> Svg Msg
+renderExit model =
+  let
+    xOffset = (model.winningPos.c) * 100 - 10
+    h = boardHeight model + 20
+    maybeW = Maybe.map (\p -> (p.shape.width * 100) + 20) (getKing model)
+    w = Maybe.withDefault 20 maybeW
+  in
+    rect [x (toString xOffset), width (toString w), height (toString h), fill "black"][]
 
 boardWidth: Model -> Int
 boardWidth model = model.numCols * 100

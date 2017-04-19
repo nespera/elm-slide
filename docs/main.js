@@ -9673,11 +9673,67 @@ var _nespera$elm_slide$Model$initial = {
 			_1: {
 				ctor: '::',
 				_0: {
-					name: 'j',
-					shape: _nespera$elm_slide$Model$small,
-					position: {r: 4, c: 3}
+					name: 'c',
+					shape: _nespera$elm_slide$Model$tall,
+					position: {r: 0, c: 3}
 				},
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: {
+						name: 'd',
+						shape: _nespera$elm_slide$Model$tall,
+						position: {r: 2, c: 0}
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							name: 'e',
+							shape: _nespera$elm_slide$Model$tall,
+							position: {r: 2, c: 3}
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								name: 'f',
+								shape: _nespera$elm_slide$Model$wide,
+								position: {r: 2, c: 1}
+							},
+							_1: {
+								ctor: '::',
+								_0: {
+									name: 'g',
+									shape: _nespera$elm_slide$Model$small,
+									position: {r: 4, c: 0}
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										name: 'h',
+										shape: _nespera$elm_slide$Model$small,
+										position: {r: 3, c: 1}
+									},
+									_1: {
+										ctor: '::',
+										_0: {
+											name: 'i',
+											shape: _nespera$elm_slide$Model$small,
+											position: {r: 3, c: 2}
+										},
+										_1: {
+											ctor: '::',
+											_0: {
+												name: 'j',
+												shape: _nespera$elm_slide$Model$small,
+												position: {r: 4, c: 3}
+											},
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -9849,54 +9905,61 @@ var _nespera$elm_slide$View$boardHeight = function (model) {
 var _nespera$elm_slide$View$boardWidth = function (model) {
 	return model.numCols * 100;
 };
-var _nespera$elm_slide$View$renderBoard = function (model) {
-	var h = _elm_lang$core$Basics$toString(
-		_nespera$elm_slide$View$boardHeight(model));
-	var w = _elm_lang$core$Basics$toString(
-		_nespera$elm_slide$View$boardWidth(model));
-	return {
-		ctor: '::',
-		_0: A2(
-			_elm_lang$svg$Svg$rect,
-			{
+var _nespera$elm_slide$View$renderExit = function (model) {
+	var maybeW = A2(
+		_elm_lang$core$Maybe$map,
+		function (p) {
+			return (p.shape.width * 100) + 20;
+		},
+		_nespera$elm_slide$Model$getKing(model));
+	var w = A2(_elm_lang$core$Maybe$withDefault, 20, maybeW);
+	var h = _nespera$elm_slide$View$boardHeight(model) + 20;
+	var xOffset = (model.winningPos.c * 100) - 10;
+	return A2(
+		_elm_lang$svg$Svg$rect,
+		{
+			ctor: '::',
+			_0: _elm_lang$svg$Svg_Attributes$x(
+				_elm_lang$core$Basics$toString(xOffset)),
+			_1: {
 				ctor: '::',
-				_0: _elm_lang$svg$Svg_Attributes$width(w),
+				_0: _elm_lang$svg$Svg_Attributes$width(
+					_elm_lang$core$Basics$toString(w)),
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$height(h),
+					_0: _elm_lang$svg$Svg_Attributes$height(
+						_elm_lang$core$Basics$toString(h)),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$svg$Svg_Attributes$fill('black'),
 						_1: {ctor: '[]'}
 					}
 				}
-			},
-			{ctor: '[]'}),
-		_1: {
+			}
+		},
+		{ctor: '[]'});
+};
+var _nespera$elm_slide$View$renderBoard = function (model) {
+	var h = _elm_lang$core$Basics$toString(
+		_nespera$elm_slide$View$boardHeight(model));
+	var w = _elm_lang$core$Basics$toString(
+		_nespera$elm_slide$View$boardWidth(model));
+	return A2(
+		_elm_lang$svg$Svg$rect,
+		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$svg$Svg$rect,
-				{
+			_0: _elm_lang$svg$Svg_Attributes$width(w),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$height(h),
+				_1: {
 					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$x('90'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$width('220'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$height('520'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$fill('black'),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				},
-				{ctor: '[]'}),
-			_1: {ctor: '[]'}
-		}
-	};
+					_0: _elm_lang$svg$Svg_Attributes$fill('black'),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{ctor: '[]'});
 };
 var _nespera$elm_slide$View$gameOverMessage = A2(
 	_elm_lang$html$Html$h1,
@@ -9961,6 +10024,18 @@ var _nespera$elm_slide$View$resetLink = A2(
 		_1: {ctor: '[]'}
 	});
 var _nespera$elm_slide$View$view = function (model) {
+	var viewBoxSize = A2(
+		_elm_lang$core$Basics_ops['++'],
+		'0 0 ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(
+				_nespera$elm_slide$View$boardWidth(model)),
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				' ',
+				_elm_lang$core$Basics$toString(
+					_nespera$elm_slide$View$boardHeight(model) + 20))));
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -9999,7 +10074,7 @@ var _nespera$elm_slide$View$view = function (model) {
 											_0: _elm_lang$svg$Svg_Attributes$y('0'),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$svg$Svg_Attributes$viewBox('0 0 400 520'),
+												_0: _elm_lang$svg$Svg_Attributes$viewBox(viewBoxSize),
 												_1: {ctor: '[]'}
 											}
 										}
@@ -10009,7 +10084,15 @@ var _nespera$elm_slide$View$view = function (model) {
 						},
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							_nespera$elm_slide$View$renderBoard(model),
+							{
+								ctor: '::',
+								_0: _nespera$elm_slide$View$renderBoard(model),
+								_1: {
+									ctor: '::',
+									_0: _nespera$elm_slide$View$renderExit(model),
+									_1: {ctor: '[]'}
+								}
+							},
 							_nespera$elm_slide$View$renderPieces(model))),
 					_1: {ctor: '[]'}
 				}),
