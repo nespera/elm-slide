@@ -10376,29 +10376,24 @@ var _nespera$elm_slide$Main$handleKeyPress = F2(
 	});
 var _nespera$elm_slide$Main$update = F2(
 	function (msg, model) {
-		var _p5 = msg;
-		switch (_p5.ctor) {
-			case 'Choose':
-				return _nespera$elm_slide$Model$gameOver(model) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
+		var newModel = function () {
+			var _p5 = msg;
+			switch (_p5.ctor) {
+				case 'Choose':
+					return _nespera$elm_slide$Model$gameOver(model) ? model : _elm_lang$core$Native_Utils.update(
 						model,
-						{active: _p5._0}),
-					_1: _nespera$elm_slide$Main$store(model)
-				};
-			case 'Pressed':
-				return _nespera$elm_slide$Model$gameOver(model) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : {
-					ctor: '_Tuple2',
-					_0: A2(_nespera$elm_slide$Main$handleKeyPress, model, _p5._0),
-					_1: _nespera$elm_slide$Main$store(model)
-				};
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _nespera$elm_slide$Model$initial(_p5._0),
-					_1: _nespera$elm_slide$Main$store(model)
-				};
-		}
+						{active: _p5._0});
+				case 'Pressed':
+					return _nespera$elm_slide$Model$gameOver(model) ? model : A2(_nespera$elm_slide$Main$handleKeyPress, model, _p5._0);
+				default:
+					return _nespera$elm_slide$Model$initial(_p5._0);
+			}
+		}();
+		return {
+			ctor: '_Tuple2',
+			_0: newModel,
+			_1: _nespera$elm_slide$Main$store(newModel)
+		};
 	});
 var _nespera$elm_slide$Main$main = _elm_lang$html$Html$programWithFlags(
 	{init: _nespera$elm_slide$Main$init, view: _nespera$elm_slide$View$view, update: _nespera$elm_slide$Main$update, subscriptions: _nespera$elm_slide$Main$subscriptions})(
