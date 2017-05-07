@@ -47,7 +47,7 @@ handleKeyPress: Model -> KeyCode -> Model
 handleKeyPress model keyCode =
   let
     char = keyCode |> Char.fromCode |> String.fromChar |> String.toLower
-    names = List.map (\p -> p.name) model.pieces
+    names = List.map .name model.pieces
   in
   case keyCode of
     37 -> makeMove model Left
@@ -86,8 +86,8 @@ updatePosition position direction =
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch [
-      downs (\code -> Pressed code),
-      presses (\code -> Pressed code)
+      downs Pressed,
+      presses Pressed
     ]
 
 

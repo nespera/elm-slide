@@ -10259,16 +10259,10 @@ var _nespera$elm_slide$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
-			_0: _elm_lang$keyboard$Keyboard$downs(
-				function (code) {
-					return _nespera$elm_slide$Msg$Pressed(code);
-				}),
+			_0: _elm_lang$keyboard$Keyboard$downs(_nespera$elm_slide$Msg$Pressed),
 			_1: {
 				ctor: '::',
-				_0: _elm_lang$keyboard$Keyboard$presses(
-					function (code) {
-						return _nespera$elm_slide$Msg$Pressed(code);
-					}),
+				_0: _elm_lang$keyboard$Keyboard$presses(_nespera$elm_slide$Msg$Pressed),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -10351,8 +10345,8 @@ var _nespera$elm_slide$Main$handleKeyPress = F2(
 	function (model, keyCode) {
 		var names = A2(
 			_elm_lang$core$List$map,
-			function (p) {
-				return p.name;
+			function (_) {
+				return _.name;
 			},
 			model.pieces);
 		var $char = _elm_lang$core$String$toLower(
